@@ -56,6 +56,17 @@ function main() {
     fs.copyFileSync(vercelJsonSrc, path.join(DIST, "vercel.json"));
     console.log("Copied vercel.json into dist/ (expo export doesn't preserve it).");
   }
+
+  const indexHtmlPath = path.join(DIST, "index.html");
+  if (fs.existsSync(indexHtmlPath)) {
+    const html = fs.readFileSync(indexHtmlPath, "utf8");
+    const verificationTag =
+      '<meta name="webscan-site-verification" content="4aR5GmM-xu2Cm33ZecygYDsehPWbQjSF">';
+    if (!html.includes(verificationTag)) {
+      fs.writeFileSync(indexHtmlPath, html.replace("<head>", `<head>\n    ${verificationTag}`));
+      console.log("Injected webscan-site-verification meta tag into dist/index.html.");
+    }
+  }
 }
 
 main();

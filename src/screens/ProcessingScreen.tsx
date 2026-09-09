@@ -62,7 +62,7 @@ export default function ProcessingScreen({ onDone }: Props) {
         </View>
 
         <View>
-          <AppText variant="titleLG" align="center">
+          <AppText variant="titleLG" align="center" heading={1}>
             Processing…
           </AppText>
           <AppText variant="bodyMD" align="center" style={styles.wait}>

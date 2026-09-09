@@ -5,6 +5,7 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
+  Text,
   View,
 } from "react-native";
 import Animated, {
@@ -221,11 +222,8 @@ export default function HomeScreen({ onNav, onStartFlow }: Props) {
           >
             <Avatar source={brandImages.pratik} size={42} />
             <View style={styles.hello}>
-              <AppText variant="headingSM" color={colors.text}>
-                Hello,{" "}
-              </AppText>
-              <AppText variant="headingSM" color={colors.text} style={styles.helloName}>
-                Pratik!
+              <AppText variant="headingSM" color={colors.text} heading={1}>
+                Hello, <Text style={styles.helloName}>Pratik!</Text>
               </AppText>
             </View>
           </Pressable>

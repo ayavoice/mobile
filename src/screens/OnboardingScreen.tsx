@@ -43,7 +43,7 @@ export default function OnboardingScreen({ onNext }: Props) {
 
       <View style={styles.body}>
         <View style={styles.copy}>
-          <AppText variant="displayMD" align="center">
+          <AppText variant="displayMD" align="center" heading={1}>
             {s.title}
           </AppText>
           <AppText variant="bodyLG" align="center" style={styles.bodyText}>

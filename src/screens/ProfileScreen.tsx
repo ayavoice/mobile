@@ -1,4 +1,4 @@
-import { Alert, Pressable, StyleSheet, View } from "react-native";
+import { Alert, Platform, Pressable, StyleSheet, View } from "react-native";
 import type { ComponentProps } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { AppText, Avatar, Card, Icon, IconWell, Screen, ScreenHeader, Toggle } from "../components/ui";
@@ -69,6 +69,14 @@ export default function ProfileScreen({ onBack, onNav, onLogout }: Props) {
   };
 
   const confirmLogout = () => {
+    // react-native-web's Alert.alert() is a no-op, so its buttons (and
+    // onLogout) never fire on web — fall back to the browser's own confirm.
+    if (Platform.OS === "web") {
+      if (window.confirm("Log out?\n\nYou'll need to sign in again to use Aya.")) {
+        onLogout();
+      }
+      return;
+    }
     Alert.alert("Log out?", "You'll need to sign in again to use Aya.", [
       { text: "Cancel", style: "cancel" },
       { text: "Log out", style: "destructive", onPress: onLogout },
@@ -135,9 +143,13 @@ export default function ProfileScreen({ onBack, onNav, onLogout }: Props) {
         <AppText variant="headingSM" style={styles.section}>
           Badges
         </AppText>
-        <View style={styles.badgeList}>
+        <View style={styles.badgeList} role="list" accessibilityLabel="Badges">
           {badges.map((badge) => (
-            <Card key={badge.label} style={[styles.badgeRow, !badge.earned && styles.badgeRowLocked]}>
+            <Card
+              key={badge.label}
+              role="listitem"
+              style={[styles.badgeRow, !badge.earned && styles.badgeRowLocked]}
+            >
               <IconWell backgroundColor={badge.earned ? badge.color : colors.surfaceGhost} size={44} radius={14}>
                 <Icon
                   name={badge.earned ? badge.icon : "lock-closed"}
@@ -158,26 +170,27 @@ export default function ProfileScreen({ onBack, onNav, onLogout }: Props) {
           ))}
         </View>
 
-        <View style={styles.links}>
+        <View style={styles.links} role="list" accessibilityLabel="More options">
           {LINKS.map((link) => (
-            <Pressable
-              key={link.screen}
-              onPress={() => onNav(link.screen)}
-              accessibilityRole="button"
-              role="button"
-              accessibilityLabel={link.label}
-            >
-              <Card style={styles.linkRow}>
-                <IconWell backgroundColor={colors.washPurple} size={44} radius={14}>
-                  <Icon name={link.icon} size={22} color={colors.purple} />
-                </IconWell>
-                <View style={styles.flex}>
-                  <AppText variant="labelMD">{link.label}</AppText>
-                  <AppText variant="caption">{link.desc}</AppText>
-                </View>
-                <Icon name="chevron-forward" size={20} color={colors.textSubtle} />
-              </Card>
-            </Pressable>
+            <View key={link.screen} role="listitem">
+              <Pressable
+                onPress={() => onNav(link.screen)}
+                accessibilityRole="button"
+                role="button"
+                accessibilityLabel={link.label}
+              >
+                <Card style={styles.linkRow}>
+                  <IconWell backgroundColor={colors.washPurple} size={44} radius={14}>
+                    <Icon name={link.icon} size={22} color={colors.purple} />
+                  </IconWell>
+                  <View style={styles.flex}>
+                    <AppText variant="labelMD">{link.label}</AppText>
+                    <AppText variant="caption">{link.desc}</AppText>
+                  </View>
+                  <Icon name="chevron-forward" size={20} color={colors.textSubtle} />
+                </Card>
+              </Pressable>
+            </View>
           ))}
         </View>
 

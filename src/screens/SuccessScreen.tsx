@@ -24,7 +24,7 @@ export default function SuccessScreen({ onDone, onReceipt }: Props) {
         </View>
 
         <View>
-          <AppText variant="displayMD" align="center">
+          <AppText variant="displayMD" align="center" heading={1}>
             {flow.successTitle}
           </AppText>
           {flow.successAmount ? (

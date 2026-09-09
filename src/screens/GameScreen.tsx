@@ -432,14 +432,15 @@ export default function GameScreen({ onBack }: Props) {
               Quick, offline games to build your voice-money confidence.
             </AppText>
 
+            <View role="list" accessibilityLabel="Mini games">
             {GAMES.map((game) => {
               const gp = progress[game.id];
               const stars = starsFor(gp.best, gp.total);
               const played = gp.total > 0;
               const edge = darken(game.accent, 40);
               return (
+                <View key={game.id} role="listitem">
                 <Pressable
-                  key={game.id}
                   onPress={() => setActiveGame(game.id)}
                   accessibilityRole="button"
                   role="button"
@@ -490,8 +491,10 @@ export default function GameScreen({ onBack }: Props) {
                     </Card>
                   )}
                 </Pressable>
+                </View>
               );
             })}
+            </View>
           </>
         )}
       </View>

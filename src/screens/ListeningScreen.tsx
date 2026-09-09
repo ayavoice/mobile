@@ -92,7 +92,13 @@ export default function ListeningScreen({ onNext, onBack }: Props) {
           <View style={[styles.waveWrap, muted && styles.waveMuted]}>
             <VoiceWave />
           </View>
-          <AppText variant="titleLG" align="center" color={colors.textSecondary} style={styles.listening}>
+          <AppText
+            variant="titleLG"
+            align="center"
+            color={colors.textSecondary}
+            style={styles.listening}
+            heading={1}
+          >
             {muted ? "Muted" : done ? "Got it" : "Listening..."}
           </AppText>
         </View>

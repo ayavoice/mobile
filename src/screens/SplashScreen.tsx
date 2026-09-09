@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { BrandLogo } from "../components/ui";
+import { AppText, BrandLogo } from "../components/ui";
 import { spacing, useColors } from "../theme";
 
 type Props = { onNext: () => void };
@@ -16,7 +16,7 @@ export default function SplashScreen({ onNext }: Props) {
   }, [onNext]);
 
   return (
-    <Pressable
+    <View
       style={[
         styles.root,
         {
@@ -25,37 +25,54 @@ export default function SplashScreen({ onNext }: Props) {
           backgroundColor: colors.background,
         },
       ]}
-      onPress={onNext}
-      accessibilityRole="button"
-      role="button"
-      accessibilityLabel="Continue to Aya"
     >
-      <BrandLogo height={92} />
+      <AppText heading={1} style={styles.hidden}>
+        Aya
+      </AppText>
+      <Pressable
+        style={styles.pressable}
+        onPress={onNext}
+        accessibilityRole="button"
+        role="button"
+        accessibilityLabel="Continue to Aya"
+      >
+        <BrandLogo height={92} />
 
-      <View style={[styles.dots, { bottom: Math.max(insets.bottom, 16) + 24 }]}>
-        {[0, 1, 2].map((i) => (
-          <View
-            key={i}
-            style={[
-              styles.dot,
-              i === 0
-                ? { width: 28, backgroundColor: colors.purple }
-                : { width: 8, backgroundColor: colors.trackIdle },
-            ]}
-          />
-        ))}
-      </View>
-    </Pressable>
+        <View style={[styles.dots, { bottom: Math.max(insets.bottom, 16) + 24 }]}>
+          {[0, 1, 2].map((i) => (
+            <View
+              key={i}
+              style={[
+                styles.dot,
+                i === 0
+                  ? { width: 28, backgroundColor: colors.purple }
+                  : { width: 8, backgroundColor: colors.trackIdle },
+              ]}
+            />
+          ))}
+        </View>
+      </Pressable>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   root: {
     flex: 1,
+    paddingHorizontal: spacing["5xl"],
+  },
+  pressable: {
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
     gap: spacing["3xl"],
-    paddingHorizontal: spacing["5xl"],
+  },
+  hidden: {
+    position: "absolute",
+    width: 1,
+    height: 1,
+    overflow: "hidden",
+    opacity: 0,
   },
   dots: {
     position: "absolute",

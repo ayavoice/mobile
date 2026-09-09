@@ -17,10 +17,17 @@ export default function TransferReceiptScreen({ onHome, onTransferMore, onBack }
   return (
     <Screen>
       <View style={styles.top}>
-        <Pressable onPress={onBack} accessibilityLabel="Go back" hitSlop={8} style={styles.topBtn}>
+        <Pressable
+          onPress={onBack}
+          accessibilityRole="button"
+          role="button"
+          accessibilityLabel="Go back"
+          hitSlop={8}
+          style={styles.topBtn}
+        >
           <Icon name="chevron-back" size={26} color={colors.text} />
         </Pressable>
-        <AppText variant="headingSM">Transfer Receipt</AppText>
+        <AppText variant="headingSM" heading={1}>Transfer Receipt</AppText>
         <View style={styles.topBtn} />
       </View>
 

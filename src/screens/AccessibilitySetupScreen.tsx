@@ -42,7 +42,7 @@ export default function AccessibilitySetupScreen({ onNext }: Props) {
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.header}>
-          <AppText variant="titleLG">Set up accessibility</AppText>
+          <AppText variant="titleLG" heading={1}>Set up accessibility</AppText>
           <AppText variant="body" style={styles.sub}>
             Turn on what helps you. These settings change how Aya looks and speaks.
           </AppText>

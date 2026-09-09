@@ -42,12 +42,21 @@ export default function SendMoneyScreen({ onSend, onBack }: Props) {
   return (
     <Screen style={styles.root}>
       <View style={styles.top}>
-        <Pressable onPress={onBack} accessibilityLabel="Go back" hitSlop={8} style={styles.topBtn}>
+        <Pressable
+          onPress={onBack}
+          accessibilityRole="button"
+          role="button"
+          accessibilityLabel="Go back"
+          hitSlop={8}
+          style={styles.topBtn}
+        >
           <Icon name="chevron-back" size={26} color={colors.text} />
         </Pressable>
-        <AppText variant="headingSM">Send Money</AppText>
+        <AppText variant="headingSM" heading={1}>Send Money</AppText>
         <Pressable
           onPress={() => Alert.alert("Notifications", "You're all caught up.")}
+          accessibilityRole="button"
+          role="button"
           accessibilityLabel="Notifications"
           hitSlop={8}
           style={styles.topBtn}

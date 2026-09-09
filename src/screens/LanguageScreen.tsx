@@ -27,7 +27,7 @@ export default function LanguageScreen({ onNext }: Props) {
   return (
     <Screen scroll>
       <View style={styles.header}>
-        <AppText variant="titleLG">Choose your language</AppText>
+        <AppText variant="titleLG" heading={1}>Choose your language</AppText>
         <AppText variant="bodyMD" style={styles.sub}>
           Aya will speak and understand you in this language, including mixing in English.
         </AppText>
