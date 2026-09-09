@@ -23,6 +23,7 @@ export { default as HistoryScreen } from "./HistoryScreen";
 export { default as ServicesScreen } from "./ServicesScreen";
 export { default as ProfileScreen } from "./ProfileScreen";
 export { default as GameScreen } from "./GameScreen";
+export { default as LeaderboardScreen } from "./LeaderboardScreen";
 export { default as AccessibilitySettingsScreen } from "./AccessibilitySettingsScreen";
 export { default as SecurityScreen } from "./SecurityScreen";
 export { default as HelpScreen } from "./HelpScreen";

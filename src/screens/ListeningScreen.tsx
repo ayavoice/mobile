@@ -117,8 +117,8 @@ export default function ListeningScreen({ onNext, onBack }: Props) {
           disabled={revealedCount === 0}
           accessibilityLabel="I'm done speaking, continue"
         >
-          <Icon name="checkmark" size={20} color={colors.white} />
-          <AppText variant="button" color={colors.white}>
+          <Icon name="checkmark" size={20} color={colors.textOnYellow} />
+          <AppText variant="button" color={colors.textOnYellow}>
             I'm done speaking
           </AppText>
         </Button>

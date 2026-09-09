@@ -35,6 +35,7 @@ import {
   ServicesScreen,
   ProfileScreen,
   GameScreen,
+  LeaderboardScreen,
   AccessibilitySettingsScreen,
   SecurityScreen,
   HelpScreen,
@@ -200,6 +201,9 @@ function AppNavigator() {
       break;
     case "game":
       content = <GameScreen onBack={back} />;
+      break;
+    case "leaderboard":
+      content = <LeaderboardScreen onBack={back} />;
       break;
     case "accessibility-settings":
       content = <AccessibilitySettingsScreen onBack={back} />;

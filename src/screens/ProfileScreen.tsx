@@ -112,7 +112,7 @@ export default function ProfileScreen({ onBack, onNav, onLogout }: Props) {
         >
           <Card style={styles.a11yRow}>
             <IconWell backgroundColor={colors.washPurple} size={44} radius={14}>
-              <Icon name="accessibility" size={22} color={colors.purple} />
+              <Icon name="accessibility" size={22} color={colors.text} />
             </IconWell>
             <View style={styles.flex}>
               <AppText variant="labelMD">Accessibility mode</AppText>
@@ -130,7 +130,7 @@ export default function ProfileScreen({ onBack, onNav, onLogout }: Props) {
 
         <Card style={styles.streakCard}>
           <IconWell backgroundColor={colors.washPurple} size={56} radius={20}>
-            <Icon name="flame" size={26} color={colors.purple} />
+            <Icon name="flame" size={26} color={colors.text} />
           </IconWell>
           <View style={styles.flex}>
             <AppText variant="labelLG">5-day practice streak</AppText>
@@ -154,7 +154,7 @@ export default function ProfileScreen({ onBack, onNav, onLogout }: Props) {
                 <Icon
                   name={badge.earned ? badge.icon : "lock-closed"}
                   size={20}
-                  color={badge.earned ? colors.purple : colors.textSubtle}
+                  color={badge.earned ? colors.text : colors.textSubtle}
                 />
               </IconWell>
               <View style={styles.flex}>
@@ -181,7 +181,7 @@ export default function ProfileScreen({ onBack, onNav, onLogout }: Props) {
               >
                 <Card style={styles.linkRow}>
                   <IconWell backgroundColor={colors.washPurple} size={44} radius={14}>
-                    <Icon name={link.icon} size={22} color={colors.purple} />
+                    <Icon name={link.icon} size={22} color={colors.text} />
                   </IconWell>
                   <View style={styles.flex}>
                     <AppText variant="labelMD">{link.label}</AppText>

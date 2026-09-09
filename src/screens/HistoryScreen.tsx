@@ -10,12 +10,12 @@ type IonName = ComponentProps<typeof Ionicons>["name"];
 
 function txHistory(colors: Palette) {
   return [
-    { icon: "arrow-up" as const, label: "Sent to Ricky Martin", sub: "Wallet", amount: "-$580.00", date: "Today, 3:02 PM", type: "sent", color: colors.washPurple },
-    { icon: "musical-notes" as const, label: "Spotify", sub: "Subscription", amount: "-$14.90", date: "Yesterday", type: "bills", color: colors.washGreen },
-    { icon: "arrow-down" as const, label: "Received from Abena Mensah", sub: "Wallet", amount: "+$300.00", date: "Yesterday, 4:20pm", type: "received", color: colors.washBlue },
-    { icon: "phone-portrait" as const, label: "Airtime", sub: "Self recharge", amount: "-$10.00", date: "6 Sep, 10:00am", type: "airtime", color: colors.washPurple },
-    { icon: "wifi" as const, label: "Data bundle", sub: "2GB, 30 days", amount: "-$25.00", date: "5 Sep, 2:15pm", type: "data", color: colors.washBlue },
-    { icon: "flash" as const, label: "Electricity", sub: "Bills", amount: "-$85.00", date: "3 Sep, 9:00am", type: "bills", color: colors.washYellow },
+    { icon: "arrow-up" as const, label: "Sent to Ricky Martin", sub: "Wallet", amount: "-GH₵580.00", date: "Today, 3:02 PM", type: "sent", color: colors.washPurple },
+    { icon: "musical-notes" as const, label: "Spotify", sub: "Subscription", amount: "-GH₵14.90", date: "Yesterday", type: "bills", color: colors.washGreen },
+    { icon: "arrow-down" as const, label: "Received from Abena Mensah", sub: "Wallet", amount: "+GH₵300.00", date: "Yesterday, 4:20pm", type: "received", color: colors.washBlue },
+    { icon: "phone-portrait" as const, label: "Airtime", sub: "Self recharge", amount: "-GH₵10.00", date: "6 Sep, 10:00am", type: "airtime", color: colors.washPurple },
+    { icon: "wifi" as const, label: "Data bundle", sub: "2GB, 30 days", amount: "-GH₵25.00", date: "5 Sep, 2:15pm", type: "data", color: colors.washBlue },
+    { icon: "flash" as const, label: "Electricity", sub: "Bills", amount: "-GH₵85.00", date: "3 Sep, 9:00am", type: "bills", color: colors.washYellow },
   ];
 }
 
@@ -39,7 +39,7 @@ export default function HistoryScreen({ onBack }: Props) {
               onPress={() => setFilter(f)}
               style={[styles.chip, on ? styles.chipOn : styles.chipOff]}
             >
-              <AppText variant="labelXS" color={on ? colors.white : colors.text}>
+              <AppText variant="labelXS" color={on ? colors.textOnYellow : colors.text}>
                 {f.charAt(0).toUpperCase() + f.slice(1)}
               </AppText>
             </Pressable>
@@ -55,7 +55,7 @@ export default function HistoryScreen({ onBack }: Props) {
               style={[styles.row, i < items.length - 1 && styles.rowDivider]}
             >
               <IconWell backgroundColor={tx.color} size={44} radius={14}>
-                <Icon name={tx.icon} size={20} color={colors.purple} />
+                <Icon name={tx.icon} size={20} color={colors.text} />
               </IconWell>
               <View style={styles.flex}>
                 <AppText variant="labelSM" numberOfLines={1}>

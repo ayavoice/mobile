@@ -48,7 +48,7 @@ export default function ProcessingScreen({ onDone }: Props) {
                 cy={60}
                 r={52}
                 fill="none"
-                stroke={colors.purple}
+                stroke={colors.text}
                 strokeWidth={8}
                 strokeLinecap="round"
                 strokeDasharray="326"
@@ -57,7 +57,7 @@ export default function ProcessingScreen({ onDone }: Props) {
             </Svg>
           </Animated.View>
           <View style={styles.iconWrap}>
-            <Icon name={iconName} size={36} color={colors.purple} />
+            <Icon name={iconName} size={36} color={colors.text} />
           </View>
         </View>
 

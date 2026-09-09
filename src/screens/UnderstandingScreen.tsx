@@ -39,7 +39,7 @@ export default function UnderstandingScreen({ onConfirm, onBack }: Props) {
         </AppText>
 
         <Card style={styles.summary}>
-          <AppText variant="titleSM" color={colors.purple} style={styles.kind}>
+          <AppText variant="titleSM" color={colors.text} style={styles.kind}>
             {flow.intentLabel}
           </AppText>
           {flow.details.map((row, i) => (
@@ -54,7 +54,7 @@ export default function UnderstandingScreen({ onConfirm, onBack }: Props) {
 
         <View style={styles.note}>
           <IconWell backgroundColor={colors.white} size={36} radius={12}>
-            <Icon name="volume-high" size={18} color={colors.purple} />
+            <Icon name="volume-high" size={18} color={colors.text} />
           </IconWell>
           <AppText variant="bodyXS" style={styles.noteText}>
             Aya will read this aloud. You'll confirm with fingerprint, face, or device unlock, never your PIN.

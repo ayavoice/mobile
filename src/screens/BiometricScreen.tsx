@@ -69,7 +69,7 @@ export default function BiometricScreen({ onSuccess, onBack }: Props) {
                 accessibilityLabel={m.label}
                 style={[styles.method, on ? styles.methodOn : styles.methodOff]}
               >
-                <Icon name={m.icon} size={28} color={on ? colors.purple : colors.text} />
+                <Icon name={m.icon} size={28} color={colors.text} />
                 <AppText variant="labelXS" align="center">
                   {m.label}
                 </AppText>
@@ -86,7 +86,7 @@ export default function BiometricScreen({ onSuccess, onBack }: Props) {
           <Icon
             name={active.icon}
             size={48}
-            color={scanning ? colors.successBright : colors.purple}
+            color={scanning ? colors.successBright : colors.text}
           />
           <AppText
             variant="labelXS"

@@ -2,6 +2,7 @@ import { Image, Pressable, View } from "react-native";
 import { AppText, Avatar, Button, Icon, Screen, ScreenFooter } from "../components/ui";
 import { brandImages } from "../content/brand";
 import { useAppPrefs } from "../context/AppPrefs";
+import { formatCurrency } from "../lib/currency";
 import { radii, spacing, useColors, usePaletteStyles, type Palette } from "../theme";
 
 type Props = { onHome: () => void; onTransferMore: () => void; onBack: () => void };
@@ -12,7 +13,7 @@ export default function TransferReceiptScreen({ onHome, onTransferMore, onBack }
   const { flow } = useAppPrefs();
   const name = flow.details.find((d) => d.label === "To")?.value ?? "Ricky Martin";
   const number = flow.details.find((d) => d.label === "Number")?.value ?? "Ac no. 8050530XXX";
-  const amount = flow.successAmount ?? "$580.00";
+  const amount = formatCurrency(flow.successAmount ?? "580.00");
 
   return (
     <Screen>
@@ -49,7 +50,7 @@ export default function TransferReceiptScreen({ onHome, onTransferMore, onBack }
           Total Transfer amount
         </AppText>
         <AppText variant="displayLG" align="center" color={colors.text} style={styles.total}>
-          {amount.startsWith("$") ? amount : `$${amount}`}
+          {amount}
         </AppText>
 
         <View style={styles.card}>

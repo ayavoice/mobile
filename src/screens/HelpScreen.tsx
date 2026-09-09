@@ -34,17 +34,17 @@ export default function HelpScreen({ onBack }: Props) {
       <View style={styles.body}>
         <View style={styles.call}>
           <IconWell backgroundColor={colors.white} size={64} radius={20}>
-            <Icon name="call" size={28} color={colors.purple} />
+            <Icon name="call" size={28} color={colors.text} />
           </IconWell>
-          <AppText variant="heading" align="center" color={colors.white} style={styles.callTitle}>
+          <AppText variant="heading" align="center" color={colors.textOnYellow} style={styles.callTitle}>
             Speak to a support agent
           </AppText>
           <AppText variant="bodySM" align="center" color={colors.textInverseMuted} style={styles.callSub}>
             Free call, 24/7, in Twi, Ewe, or English
           </AppText>
           <Pressable style={styles.callBtn} accessibilityRole="button" role="button">
-            <Icon name="call-outline" size={18} color={colors.purple} />
-            <AppText variant="labelMD" color={colors.purple}>
+            <Icon name="call-outline" size={18} color={colors.text} />
+            <AppText variant="labelMD" color={colors.text}>
               Call 0800-AYA-HELP
             </AppText>
           </Pressable>
@@ -53,7 +53,7 @@ export default function HelpScreen({ onBack }: Props) {
         {FAQS.map((faq) => (
           <Card key={faq.q}>
             <View style={styles.faqHead}>
-              <Icon name="help-circle" size={20} color={colors.purple} />
+              <Icon name="help-circle" size={20} color={colors.text} />
               <AppText variant="labelSM" style={styles.q}>
                 {faq.q}
               </AppText>
@@ -111,7 +111,7 @@ export default function HelpScreen({ onBack }: Props) {
                 Check your mobile data or Wi-Fi. Aya needs a connection to send money.
               </AppText>
               <Pressable style={styles.retry}>
-                <AppText variant="labelXS" color={colors.white}>
+                <AppText variant="labelXS" color={colors.textOnYellow}>
                   Retry
                 </AppText>
               </Pressable>

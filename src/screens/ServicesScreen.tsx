@@ -51,7 +51,7 @@ export default function ServicesScreen({ onBack, onStartFlow }: Props) {
               style={styles.tile}
             >
               <IconWell backgroundColor={colors.washPurple} size={44} radius={16}>
-                <Icon name={service.icon} size={22} color={colors.purple} />
+                <Icon name={service.icon} size={22} color={colors.text} />
               </IconWell>
               <AppText variant="labelSM">{service.label}</AppText>
               <AppText variant="caption">{service.hint}</AppText>

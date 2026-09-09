@@ -60,7 +60,7 @@ export default function ConfirmationScreen({ onConfirm, onBack }: Props) {
           >
             {flow.confirmHero}
           </AppText>
-          <AppText variant="heading" color={colors.white} align="center" style={styles.to}>
+          <AppText variant="heading" color={colors.textOnYellow} align="center" style={styles.to}>
             {flow.confirmTarget}
           </AppText>
           <AppText variant="bodySM" color={colors.textInverseMuted} align="center">
@@ -119,7 +119,7 @@ export default function ConfirmationScreen({ onConfirm, onBack }: Props) {
         ) : null}
 
         <View style={styles.lock}>
-          <Icon name="lock-closed" size={22} color={colors.purple} />
+          <Icon name="lock-closed" size={22} color={colors.text} />
           <AppText variant="bodySM" style={styles.lockText}>
             Next: private device authentication. Microphone will turn OFF. Never speak your MoMo PIN.
           </AppText>

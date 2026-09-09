@@ -28,7 +28,7 @@ export default function SecurityScreen({ onBack }: Props) {
         <Card>
           <View style={styles.row}>
             <IconWell backgroundColor={colors.washPurple} size={48} radius={14}>
-              <Icon name="finger-print" size={24} color={colors.purple} />
+              <Icon name="finger-print" size={24} color={colors.text} />
             </IconWell>
             <View style={styles.flex}>
               <AppText variant="labelMD">Biometric authentication</AppText>
@@ -91,7 +91,7 @@ export default function SecurityScreen({ onBack }: Props) {
         <Card>
           <View style={styles.row}>
             <IconWell backgroundColor={colors.washBlue} size={48} radius={14}>
-              <Icon name="mic-off" size={24} color={colors.purple} />
+              <Icon name="mic-off" size={24} color={colors.text} />
             </IconWell>
             <View style={styles.flex}>
               <AppText variant="labelMD">Microphone during authentication</AppText>

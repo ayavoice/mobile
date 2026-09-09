@@ -55,13 +55,13 @@ export default function TabBar({ current, onNav, onStartFlow }: Props) {
               style={styles.tab}
             >
               <View style={[styles.speechIcon, { backgroundColor: colors.purple }]}>
-                <WaveIcon size={28} color={colors.white} />
+                <WaveIcon size={28} color={colors.textOnYellow} />
               </View>
               <AppText
                 variant="tab"
                 numberOfLines={1}
                 style={[styles.tabLabel, styles.speechLabel]}
-                color={colors.purple}
+                color={colors.text}
               >
                 {tab.label}
               </AppText>
@@ -85,13 +85,13 @@ export default function TabBar({ current, onNav, onStartFlow }: Props) {
             <View
               style={[styles.tabIcon, active && { backgroundColor: colors.purple }]}
             >
-              <Icon name={tab.icon} size={22} color={active ? colors.white : colors.textSubtle} />
+              <Icon name={tab.icon} size={22} color={active ? colors.textOnYellow : colors.textSubtle} />
             </View>
             <AppText
               variant="tab"
               numberOfLines={1}
               style={styles.tabLabel}
-              color={active ? colors.purple : colors.textSubtle}
+              color={active ? colors.text : colors.textSubtle}
             >
               {tab.label}
             </AppText>

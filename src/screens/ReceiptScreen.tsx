@@ -1,13 +1,14 @@
 import { Pressable, StyleSheet, View } from "react-native";
 import { AppText, Icon, Screen, ScreenHeader } from "../components/ui";
 import { useAppPrefs } from "../context/AppPrefs";
+import { formatCurrency } from "../lib/currency";
 import { colors, radii, spacing } from "../theme";
 
 type Props = { onBack: () => void };
 
 export default function ReceiptScreen({ onBack }: Props) {
   const { flow } = useAppPrefs();
-  const amount = flow.successAmount ?? "$580.00";
+  const amount = formatCurrency(flow.successAmount ?? "580.00");
   const rows = flow.successDetails.length
     ? flow.successDetails
     : [
@@ -27,8 +28,8 @@ export default function ReceiptScreen({ onBack }: Props) {
             <AppText variant="caption" color={colors.textInverseMuted} align="center">
               Amount sent
             </AppText>
-            <AppText variant="displayLG" color={colors.white} align="center" style={styles.amount}>
-              {amount.startsWith("$") || amount.startsWith("GH") ? amount : `$${amount}`}
+            <AppText variant="displayLG" color={colors.textOnYellow} align="center" style={styles.amount}>
+              {amount}
             </AppText>
             <AppText variant="body" color={colors.textInverseMuted} align="center">
               {flow.successTitle}
@@ -44,12 +45,12 @@ export default function ReceiptScreen({ onBack }: Props) {
           </View>
           <View style={styles.actions}>
             <Pressable style={styles.ghost} accessibilityRole="button" role="button">
-              <Icon name="volume-high" size={18} color={colors.purple} />
+              <Icon name="volume-high" size={18} color={colors.text} />
               <AppText variant="labelSM">Read aloud</AppText>
             </Pressable>
             <Pressable style={styles.primary} accessibilityRole="button" role="button">
-              <Icon name="share-outline" size={18} color={colors.white} />
-              <AppText variant="labelSM" color={colors.white}>
+              <Icon name="share-outline" size={18} color={colors.textOnYellow} />
+              <AppText variant="labelSM" color={colors.textOnYellow}>
                 Share
               </AppText>
             </Pressable>

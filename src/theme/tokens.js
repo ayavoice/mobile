@@ -3,13 +3,13 @@
  */
 module.exports = {
   colors: {
-    yellow: "#6D4AFF",
+    yellow: "#FFCC08",
     dark: "#1B1433",
     white: "#FFFFFF",
     backgroundMuted: "#FAFAFC",
     surfaceGhost: "#F3F2F8",
     surfaceCard: "#F6F5FB",
-    surfaceYellow: "#F3F0FF",
+    surfaceYellow: "#FFF6D9",
     border: "#F0EEF6",
     borderMuted: "#F3F2F8",
     text: "#111111",

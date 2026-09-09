@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Alert, Pressable, StyleSheet, View } from "react-native";
 import { AppText, Avatar, Button, Icon, Screen, ScreenFooter } from "../components/ui";
-import { ACCENT, brandImages } from "../content/brand";
+import { brandImages } from "../content/brand";
 import { useAppPrefs } from "../context/AppPrefs";
 import { spacing, useColors } from "../theme";
 
@@ -30,11 +30,14 @@ export default function SendMoneyScreen({ onSend, onBack }: Props) {
       setAmount((v) => (v.length > 1 ? v.slice(0, -1) : "0"));
       return;
     }
-    if (key === "." && amount.includes(".")) return;
-    setAmount((v) => {
-      const next = v === "0" && key !== "." ? key : v + key;
-      return next;
-    });
+    if (key === ".") {
+      if (amount.includes(".")) return;
+      setAmount((v) => v + key);
+      return;
+    }
+    const decimalIndex = amount.indexOf(".");
+    if (decimalIndex !== -1 && amount.length - decimalIndex - 1 >= 2) return;
+    setAmount((v) => (v === "0" ? key : v + key));
   };
 
   const canSend = Number(amount) > 0;
@@ -68,7 +71,7 @@ export default function SendMoneyScreen({ onSend, onBack }: Props) {
       <View style={styles.body}>
         <View style={styles.recipient}>
           <Avatar source={brandImages.ricky} size={108} />
-          <AppText variant="heading" color={ACCENT} style={styles.name}>
+          <AppText variant="heading" color={colors.text} style={styles.name}>
             {recipient.name}
           </AppText>
           <AppText variant="bodySM" color={colors.textSubtle}>
@@ -89,7 +92,7 @@ export default function SendMoneyScreen({ onSend, onBack }: Props) {
           adjustsFontSizeToFit
           style={styles.amount}
         >
-          {`$${amount.includes(".") ? amount : `${amount}.00`}`}
+          {`GH₵${amount.includes(".") ? amount : `${amount}.00`}`}
         </AppText>
 
         <View style={styles.keypad}>

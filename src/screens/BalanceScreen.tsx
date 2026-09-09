@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { AppText, Button, Icon, IconWell, Screen, ScreenFooter, ScreenHeader } from "../components/ui";
 import { useAppPrefs } from "../context/AppPrefs";
+import { formatCurrency } from "../lib/currency";
 import { colors, radii, spacing } from "../theme";
 
 type Props = { onBack: () => void };
@@ -9,7 +10,7 @@ type Props = { onBack: () => void };
 export default function BalanceScreen({ onBack }: Props) {
   const { flow } = useAppPrefs();
   const [revealed, setRevealed] = useState(false);
-  const amount = flow.successAmount ?? "$2648.34";
+  const amount = flow.successAmount ?? formatCurrency(2648.34);
 
   return (
     <Screen background={colors.white}>
@@ -23,14 +24,14 @@ export default function BalanceScreen({ onBack }: Props) {
           <View style={styles.messageCard}>
             <View style={styles.metaRow}>
               <IconWell backgroundColor={colors.washPurple} size={36} radius={12}>
-                <Icon name="mic" size={18} color={colors.purple} />
+                <Icon name="mic" size={18} color={colors.text} />
               </IconWell>
               <View style={styles.flex}>
                 <AppText variant="labelXS">You said</AppText>
                 <AppText variant="caption">{flow.utterance.languageLabel}</AppText>
               </View>
               <View style={styles.chip}>
-                <AppText variant="caption" color={colors.purple}>
+                <AppText variant="caption" color={colors.text}>
                   Voice
                 </AppText>
               </View>
@@ -46,9 +47,9 @@ export default function BalanceScreen({ onBack }: Props) {
           <View style={styles.messageCard}>
             <View style={styles.metaRow}>
               <IconWell backgroundColor={colors.washPurple} size={36} radius={12}>
-                <Icon name="volume-high" size={18} color={colors.purple} />
+                <Icon name="volume-high" size={18} color={colors.text} />
               </IconWell>
-              <AppText variant="labelXS" color={colors.purple}>
+              <AppText variant="labelXS" color={colors.text}>
                 Aya
               </AppText>
             </View>
@@ -64,7 +65,7 @@ export default function BalanceScreen({ onBack }: Props) {
           </AppText>
           <AppText
             variant="displayLG"
-            color={colors.white}
+            color={colors.textOnYellow}
             style={styles.amount}
             accessibilityLiveRegion="polite"
           >
@@ -82,9 +83,9 @@ export default function BalanceScreen({ onBack }: Props) {
             <Icon
               name={revealed ? "eye-off-outline" : "eye-outline"}
               size={18}
-              color={colors.purple}
+              color={colors.text}
             />
-            <AppText variant="labelXS" color={colors.purple}>
+            <AppText variant="labelXS" color={colors.text}>
               {revealed ? "Hide balance" : "Reveal balance"}
             </AppText>
           </Pressable>

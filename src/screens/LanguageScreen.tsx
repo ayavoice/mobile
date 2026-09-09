@@ -51,7 +51,7 @@ export default function LanguageScreen({ onNext }: Props) {
                 size={52}
                 radius={18}
               >
-                <AppText variant="labelMD" color={colors.purple}>
+                <AppText variant="labelMD" color={colors.text}>
                   {lang.badge}
                 </AppText>
               </IconWell>
@@ -66,7 +66,7 @@ export default function LanguageScreen({ onNext }: Props) {
               </View>
 
               <View style={[styles.check, active ? styles.checkOn : styles.checkOff]}>
-                {active ? <Icon name="checkmark" size={16} color={colors.white} /> : null}
+                {active ? <Icon name="checkmark" size={16} color={colors.textOnYellow} /> : null}
               </View>
             </Pressable>
           );

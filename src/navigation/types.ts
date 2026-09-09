@@ -24,6 +24,7 @@ export type ScreenId =
   | "services"
   | "profile"
   | "game"
+  | "leaderboard"
   | "accessibility-settings"
   | "security"
   | "help"

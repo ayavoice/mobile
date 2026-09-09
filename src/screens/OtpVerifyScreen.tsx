@@ -49,7 +49,7 @@ export default function OtpVerifyScreen({ onVerified, onBack }: Props) {
             autoFocus
             textContentType="oneTimeCode"
           />
-          {verifying ? <ActivityIndicator color={colors.purple} style={styles.spinner} /> : null}
+          {verifying ? <ActivityIndicator color={colors.text} style={styles.spinner} /> : null}
         </View>
 
         <Pressable
@@ -64,7 +64,7 @@ export default function OtpVerifyScreen({ onVerified, onBack }: Props) {
           <AppText variant="bodySM" color={colors.textSecondary}>
             Didn't get it?{" "}
           </AppText>
-          <AppText variant="bodySM" color={colors.purple} style={styles.resendStrong}>
+          <AppText variant="bodySM" color={colors.text} style={styles.resendStrong}>
             Resend code
           </AppText>
         </Pressable>

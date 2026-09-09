@@ -50,7 +50,7 @@ export default function CreatePinScreen({ mode, onDone, onBack }: Props) {
 
       <View style={styles.body}>
         <IconWell backgroundColor={colors.washPurple} size={56} radius={20}>
-          <Icon name="lock-closed" size={26} color={colors.purple} />
+          <Icon name="lock-closed" size={26} color={colors.text} />
         </IconWell>
 
         <AppText variant="labelLG" align="center">

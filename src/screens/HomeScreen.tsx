@@ -21,10 +21,11 @@ import Svg, { Circle, Path, Rect } from "react-native-svg";
 import { AppText, Avatar, Icon, MciIcon, Screen } from "../components/ui";
 import { ACCENT, brandImages } from "../content/brand";
 import type { FlowId } from "../content/flows";
+import { formatCurrency } from "../lib/currency";
 import type { ScreenId } from "../navigation/types";
 import { radii, spacing, useColors, usePaletteStyles, type Palette } from "../theme";
 
-type BannerIllustration = "voice" | "gift" | "shield";
+type BannerIllustration = "voice" | "gift" | "shield" | "trophy";
 
 const ART_SIZE = 148;
 
@@ -88,9 +89,45 @@ function ShieldIllustration() {
   );
 }
 
+function TrophyIllustration() {
+  return (
+    <Svg width={ART_SIZE} height={ART_SIZE} viewBox="0 0 148 148">
+      <Circle cx={102} cy={40} r={52} fill="rgba(255,255,255,0.2)" />
+      <Circle cx={34} cy={110} r={26} fill="rgba(255,255,255,0.18)" />
+      <Circle cx={30} cy={40} r={5} fill="rgba(255,255,255,0.6)" />
+      <Circle cx={122} cy={104} r={7} fill="rgba(255,255,255,0.5)" />
+      <Rect x={66} y={112} width={36} height={10} rx={3} fill="#FFFFFF" opacity={0.92} />
+      <Rect x={76} y={98} width={16} height={18} fill="#FFFFFF" opacity={0.92} />
+      <Path
+        d="M58 52h48v20c0 15-11 27-24 27s-24-12-24-27z"
+        fill="#FFFFFF"
+        opacity={0.92}
+      />
+      <Path
+        d="M58 56c-10 0-16 6-16 14s7 13 15 13"
+        stroke="#FFFFFF"
+        strokeWidth={5}
+        strokeLinecap="round"
+        fill="none"
+        opacity={0.92}
+      />
+      <Path
+        d="M106 56c10 0 16 6 16 14s-7 13-15 13"
+        stroke="#FFFFFF"
+        strokeWidth={5}
+        strokeLinecap="round"
+        fill="none"
+        opacity={0.92}
+      />
+      <Path d="M82 66l3.6 7.4 8.2 1.2-5.9 5.7 1.4 8.1L82 84.5l-7.3 3.9 1.4-8.1-5.9-5.7 8.2-1.2z" fill={ACCENT} />
+    </Svg>
+  );
+}
+
 function BannerArt({ kind }: { kind: BannerIllustration }) {
   if (kind === "voice") return <VoiceIllustration />;
   if (kind === "gift") return <GiftIllustration />;
+  if (kind === "trophy") return <TrophyIllustration />;
   return <ShieldIllustration />;
 }
 
@@ -119,39 +156,54 @@ const BANNER_WIDTH = 280;
 const BANNER_HEIGHT = 112;
 const BANNER_GAP = 12;
 
-function bannersFor(colors: Palette): {
+function bannersFor(
+  colors: Palette,
+  onNav: (screen: ScreenId) => void,
+): {
   illustration: BannerIllustration;
   title: string;
   bg: string;
+  accessibilityLabel: string;
+  onPress?: () => void;
 }[] {
   return [
     {
       illustration: "voice",
       title: "Send with just your voice",
       bg: colors.washPurple,
+      accessibilityLabel: "Send with just your voice",
     },
     {
       illustration: "gift",
       title: "Invite friends, earn GH₵20",
       bg: colors.washBlue,
+      accessibilityLabel: "Invite friends, earn GH₵20",
+    },
+    {
+      illustration: "trophy",
+      title: "See who's top of the leaderboard",
+      bg: colors.washYellow,
+      accessibilityLabel: "Open leaderboard",
+      onPress: () => onNav("leaderboard"),
     },
     {
       illustration: "shield",
       title: "Your PIN stays yours",
       bg: colors.washGreen,
+      accessibilityLabel: "Your PIN stays yours",
     },
   ];
 }
 
 const MIC_WAVE_BARS = [
-  { h: 16, delay: 0 },
-  { h: 32, delay: 90 },
-  { h: 48, delay: 40 },
-  { h: 28, delay: 130 },
-  { h: 16, delay: 60 },
+  { h: 16, delay: 0, color: "#B57CFF" },
+  { h: 32, delay: 90, color: "#9B5CFF" },
+  { h: 48, delay: 40, color: "#7B4DFF" },
+  { h: 28, delay: 130, color: "#E14BFF" },
+  { h: 16, delay: 60, color: "#C45CFF" },
 ];
 
-function MicWaveBar({ height, delay }: { height: number; delay: number }) {
+function MicWaveBar({ height, delay, color }: { height: number; delay: number; color: string }) {
   const scale = useSharedValue(0.45);
 
   useEffect(() => {
@@ -170,14 +222,14 @@ function MicWaveBar({ height, delay }: { height: number; delay: number }) {
 
   const style = useAnimatedStyle(() => ({ transform: [{ scaleY: scale.value }] }));
 
-  return <Animated.View style={[micWaveStyles.bar, { height }, style]} />;
+  return <Animated.View style={[micWaveStyles.bar, { height, backgroundColor: color }, style]} />;
 }
 
 function MicWave() {
   return (
     <View style={micWaveStyles.row}>
       {MIC_WAVE_BARS.map((bar, i) => (
-        <MicWaveBar key={i} height={bar.h} delay={bar.delay} />
+        <MicWaveBar key={i} height={bar.h} delay={bar.delay} color={bar.color} />
       ))}
     </View>
   );
@@ -194,7 +246,6 @@ const micWaveStyles = StyleSheet.create({
   bar: {
     width: 6,
     borderRadius: 3,
-    backgroundColor: ACCENT,
   },
 });
 
@@ -202,7 +253,7 @@ export default function HomeScreen({ onNav, onStartFlow }: Props) {
   const colors = useColors();
   const styles = usePaletteStyles(createHomeStyles);
   const [selectedSend, setSelectedSend] = useState("Mansi");
-  const BANNERS = bannersFor(colors);
+  const BANNERS = bannersFor(colors, onNav);
 
   return (
     <Screen style={styles.root} safeBottom={false}>
@@ -253,7 +304,7 @@ export default function HomeScreen({ onNav, onStartFlow }: Props) {
           </View>
         </View>
 
-        <AppText variant="labelSM" align="center" color={ACCENT} style={styles.balanceLabel}>
+        <AppText variant="labelSM" align="center" color={colors.text} style={styles.balanceLabel}>
           Your balance
         </AppText>
         <AppText
@@ -264,7 +315,7 @@ export default function HomeScreen({ onNav, onStartFlow }: Props) {
           numberOfLines={1}
           adjustsFontSizeToFit
         >
-          $2648.34
+          {formatCurrency(2648.34)}
         </AppText>
 
         <View style={styles.stage}>
@@ -341,7 +392,7 @@ export default function HomeScreen({ onNav, onStartFlow }: Props) {
             <AppText variant="labelSM">Spotify</AppText>
             <AppText variant="caption">Yesterday</AppText>
           </View>
-          <AppText variant="amount">-$14.90</AppText>
+          <AppText variant="amount">-{formatCurrency(14.9)}</AppText>
         </Pressable>
 
         <ScrollView
@@ -355,22 +406,31 @@ export default function HomeScreen({ onNav, onStartFlow }: Props) {
           accessibilityLabel="Promotions"
         >
           {BANNERS.map((banner, i) => (
-            <View key={i} role="listitem" style={[styles.bannerCard, { backgroundColor: banner.bg }]}>
-              <View style={styles.bannerText}>
-                <AppText variant="labelLG" color={colors.text}>
-                  {banner.title}
-                </AppText>
-              </View>
-              <View style={styles.bannerArt}>
-                <BannerArt kind={banner.illustration} />
-              </View>
+            <View key={i} role="listitem">
+              <Pressable
+                onPress={banner.onPress}
+                disabled={!banner.onPress}
+                accessibilityRole={banner.onPress ? "button" : undefined}
+                role={banner.onPress ? "button" : undefined}
+                accessibilityLabel={banner.accessibilityLabel}
+                style={[styles.bannerCard, { backgroundColor: banner.bg }]}
+              >
+                <View style={styles.bannerText}>
+                  <AppText variant="labelLG" color={colors.text}>
+                    {banner.title}
+                  </AppText>
+                </View>
+                <View style={styles.bannerArt}>
+                  <BannerArt kind={banner.illustration} />
+                </View>
+              </Pressable>
             </View>
           ))}
         </ScrollView>
 
         <View style={styles.quickHead}>
           <AppText variant="headingSM">Quick send </AppText>
-          <AppText variant="headingSM" color={ACCENT}>
+          <AppText variant="headingSM" color={colors.text}>
             6
           </AppText>
         </View>

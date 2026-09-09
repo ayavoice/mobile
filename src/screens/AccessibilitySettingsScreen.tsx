@@ -58,7 +58,7 @@ export default function AccessibilitySettingsScreen({ onBack }: Props) {
                   accessibilityState={{ selected: on }}
                   accessibilityLabel={lang.label}
                 >
-                  <AppText variant="labelXS" color={on ? colors.white : colors.text}>
+                  <AppText variant="labelXS" color={on ? colors.textOnYellow : colors.text}>
                     {lang.label}
                   </AppText>
                 </Pressable>
@@ -81,7 +81,7 @@ export default function AccessibilitySettingsScreen({ onBack }: Props) {
                   onPress={() => setAccessibility({ textSize: level, largeText: level > 1 })}
                   style={[styles.choice, on ? styles.choiceOn : styles.choiceOff]}
                 >
-                  <AppText style={{ fontSize: size, fontWeight: "700", color: on ? colors.white : colors.text }}>
+                  <AppText style={{ fontSize: size, fontWeight: "700", color: on ? colors.textOnYellow : colors.text }}>
                     A
                   </AppText>
                 </Pressable>
@@ -104,7 +104,7 @@ export default function AccessibilitySettingsScreen({ onBack }: Props) {
                   onPress={() => setAccessibility({ speechSpeed: level })}
                   style={[styles.choice, on ? styles.choiceOn : styles.choiceOff]}
                 >
-                  <AppText variant="labelXS" color={on ? colors.white : colors.text}>
+                  <AppText variant="labelXS" color={on ? colors.textOnYellow : colors.text}>
                     {label}
                   </AppText>
                 </Pressable>
@@ -127,7 +127,7 @@ export default function AccessibilitySettingsScreen({ onBack }: Props) {
             <Card>
               <View style={styles.toggleRow}>
                 <IconWell backgroundColor={colors.surfaceGhost} size={44} radius={14}>
-                  <Icon name={opt.icon} size={22} color={colors.purple} />
+                  <Icon name={opt.icon} size={22} color={colors.text} />
                 </IconWell>
                 <View style={styles.flex}>
                   <AppText variant="labelMD">{opt.label}</AppText>

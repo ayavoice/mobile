@@ -1,4 +1,4 @@
-export const ACCENT = "#6D4AFF";
+export const ACCENT = "#FFCC08";
 
 export const brandImages = {
   logoLight: require("../../assets/brand/logo.png"),

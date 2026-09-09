@@ -20,7 +20,7 @@ export const typography = {
     fontSize: 56,
     letterSpacing: -2,
     lineHeight: 60,
-    color: colors.white,
+    color: colors.textOnYellow,
   } satisfies TextStyle,
 
   displayXL: {

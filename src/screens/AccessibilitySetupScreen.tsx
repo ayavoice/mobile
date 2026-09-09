@@ -66,7 +66,7 @@ export default function AccessibilitySetupScreen({ onNext }: Props) {
                   size={44}
                   radius={14}
                 >
-                  <Icon name={opt.icon} size={22} color={colors.purple} />
+                  <Icon name={opt.icon} size={22} color={colors.text} />
                 </IconWell>
                 <View style={styles.meta}>
                   <AppText variant="labelMD">{opt.label}</AppText>

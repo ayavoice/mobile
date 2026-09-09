@@ -4,8 +4,8 @@
  */
 
 export const lightColors = {
-  yellow: "#6D4AFF",
-  purple: "#6D4AFF",
+  yellow: "#FFCC08",
+  purple: "#FFCC08",
   dark: "#1B1433",
   white: "#FFFFFF",
 
@@ -14,7 +14,7 @@ export const lightColors = {
   surface: "#FFFFFF",
   surfaceCard: "#F6F5FB",
   surfaceGhost: "#F3F2F8",
-  surfaceYellow: "#F3F0FF",
+  surfaceYellow: "#FFF6D9",
   surfaceWarning: "#FFF4E8",
   surfaceWarningSoft: "#FFF7EE",
 
@@ -28,8 +28,8 @@ export const lightColors = {
   textMuted: "#7A7A85",
   textSubtle: "#8E8E99",
   textInverse: "#FFFFFF",
-  textInverseMuted: "rgba(255,255,255,0.72)",
-  textOnYellow: "#FFFFFF",
+  textInverseMuted: "rgba(0,0,0,0.65)",
+  textOnYellow: "#000000",
 
   success: "#2E7D32",
   successDark: "#1B5E20",
@@ -48,14 +48,14 @@ export const lightColors = {
   warningText: "#6B4508",
 
   washGreen: "#EAF7EC",
-  washYellow: "#F3F0FF",
-  washPurple: "#EDE8FF",
+  washYellow: "#FFF6D9",
+  washPurple: "#FFF6D9",
   washBlue: "#E8F1FF",
   washRed: "#FDECEC",
 
-  overlayYellow: "rgba(109,74,255,0.16)",
-  overlayYellowSoft: "rgba(109,74,255,0.08)",
-  overlayYellowMid: "rgba(109,74,255,0.12)",
+  overlayYellow: "rgba(255,204,8,0.18)",
+  overlayYellowSoft: "rgba(255,204,8,0.10)",
+  overlayYellowMid: "rgba(255,204,8,0.14)",
   overlayWhite: "rgba(255,255,255,0.1)",
   overlayWhiteMuted: "rgba(255,255,255,0.35)",
   overlayDark: "rgba(0,0,0,0.28)",
@@ -65,8 +65,8 @@ export const lightColors = {
 } as const;
 
 export const darkColors: { [K in keyof typeof lightColors]: string } = {
-  yellow: "#8B74FF",
-  purple: "#8B74FF",
+  yellow: "#FFCC08",
+  purple: "#FFCC08",
   dark: "#07060C",
   white: "#FFFFFF",
 
@@ -75,7 +75,7 @@ export const darkColors: { [K in keyof typeof lightColors]: string } = {
   surface: "#14121C",
   surfaceCard: "#1C1928",
   surfaceGhost: "#242132",
-  surfaceYellow: "#2A2440",
+  surfaceYellow: "#3A3218",
   surfaceWarning: "#2C2318",
   surfaceWarningSoft: "#2A241C",
 
@@ -89,8 +89,8 @@ export const darkColors: { [K in keyof typeof lightColors]: string } = {
   textMuted: "#9B98A8",
   textSubtle: "#7E7B8C",
   textInverse: "#FFFFFF",
-  textInverseMuted: "rgba(255,255,255,0.62)",
-  textOnYellow: "#FFFFFF",
+  textInverseMuted: "rgba(0,0,0,0.6)",
+  textOnYellow: "#000000",
 
   success: "#81C784",
   successDark: "#A5D6A7",
@@ -109,14 +109,14 @@ export const darkColors: { [K in keyof typeof lightColors]: string } = {
   warningText: "#FFE0B2",
 
   washGreen: "#16301C",
-  washYellow: "#2A2440",
-  washPurple: "#2A2440",
+  washYellow: "#3A3218",
+  washPurple: "#3A3218",
   washBlue: "#182338",
   washRed: "#3A1818",
 
-  overlayYellow: "rgba(139,116,255,0.22)",
-  overlayYellowSoft: "rgba(139,116,255,0.12)",
-  overlayYellowMid: "rgba(139,116,255,0.18)",
+  overlayYellow: "rgba(255,204,8,0.26)",
+  overlayYellowSoft: "rgba(255,204,8,0.14)",
+  overlayYellowMid: "rgba(255,204,8,0.20)",
   overlayWhite: "rgba(255,255,255,0.08)",
   overlayWhiteMuted: "rgba(255,255,255,0.28)",
   overlayDark: "rgba(0,0,0,0.45)",

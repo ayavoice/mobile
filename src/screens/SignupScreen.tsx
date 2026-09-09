@@ -79,7 +79,7 @@ export default function SignupScreen({ onNext, onBack, onLogin }: Props) {
           <AppText variant="bodySM" color={colors.textSecondary}>
             Already have an account?{" "}
           </AppText>
-          <AppText variant="bodySM" color={colors.purple} style={styles.footerLinkStrong}>
+          <AppText variant="bodySM" color={colors.text} style={styles.footerLinkStrong}>
             Log in
           </AppText>
         </Pressable>

@@ -58,7 +58,7 @@ export default function LoginScreen({ onNext, onBack, onForgotPin, onSignup }: P
 
         <View style={styles.pinBody}>
           <IconWell backgroundColor={colors.washPurple} size={56} radius={20}>
-            <Icon name="lock-closed" size={26} color={colors.purple} />
+            <Icon name="lock-closed" size={26} color={colors.text} />
           </IconWell>
 
           <AppText variant="labelLG" align="center" heading={1}>
@@ -74,7 +74,7 @@ export default function LoginScreen({ onNext, onBack, onForgotPin, onSignup }: P
             accessibilityLabel="Forgot PIN?"
             hitSlop={8}
           >
-            <AppText variant="bodySM" color={colors.purple}>
+            <AppText variant="bodySM" color={colors.text}>
               Forgot PIN?
             </AppText>
           </Pressable>
@@ -127,7 +127,7 @@ export default function LoginScreen({ onNext, onBack, onForgotPin, onSignup }: P
           <AppText variant="bodySM" color={colors.textSecondary}>
             New to Aya?{" "}
           </AppText>
-          <AppText variant="bodySM" color={colors.purple} style={styles.footerLinkStrong}>
+          <AppText variant="bodySM" color={colors.text} style={styles.footerLinkStrong}>
             Create account
           </AppText>
         </Pressable>

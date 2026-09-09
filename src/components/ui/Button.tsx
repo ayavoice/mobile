@@ -34,7 +34,7 @@ function variantFill(variant: ButtonVariant, colors: Palette) {
 }
 
 function variantLabel(variant: ButtonVariant, colors: Palette) {
-  if (variant === "primary" || variant === "purple") return colors.white;
+  if (variant === "primary" || variant === "purple") return colors.textOnYellow;
   if (variant === "danger") return colors.danger;
   return colors.text;
 }

@@ -17,11 +17,13 @@ type AppTextProps = TextProps & {
 };
 
 function colorForVariant(variant: TypographyVariant, colors: Palette) {
+  if (variant === "heroAmount") {
+    return colors.textOnYellow;
+  }
   if (
     variant === "heroBrand" ||
     variant === "overlineBrand" ||
-    variant === "tagline" ||
-    variant === "heroAmount"
+    variant === "tagline"
   ) {
     return colors.text;
   }

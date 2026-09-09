@@ -20,7 +20,7 @@ export default function SuccessScreen({ onDone, onReceipt }: Props) {
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.check}>
-          <Icon name="checkmark" size={40} color={colors.white} />
+          <Icon name="checkmark" size={40} color={colors.textOnYellow} />
         </View>
 
         <View>
@@ -53,9 +53,9 @@ export default function SuccessScreen({ onDone, onReceipt }: Props) {
             <Icon
               name={revealed ? "eye-off-outline" : "eye-outline"}
               size={18}
-              color={colors.purple}
+              color={colors.text}
             />
-            <AppText variant="labelXS" color={colors.purple}>
+            <AppText variant="labelXS" color={colors.text}>
               {revealed ? "Hide balance" : "Reveal balance"}
             </AppText>
           </Pressable>
@@ -63,7 +63,7 @@ export default function SuccessScreen({ onDone, onReceipt }: Props) {
 
         {accessibility.voiceFirst ? (
           <View style={styles.aya}>
-            <Icon name="volume-high" size={20} color={colors.purple} />
+            <Icon name="volume-high" size={20} color={colors.text} />
             <AppText variant="bodySM" style={styles.textFlex}>
               {isBalance
                 ? `Aya says: "Your current balance is ${flow.successAmount}"`
