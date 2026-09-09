@@ -1,0 +1,129 @@
+import { Pressable, StyleSheet, View } from "react-native";
+import type { ComponentProps } from "react";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { AppText, Icon } from "./ui";
+import type { FlowId } from "../content/flows";
+import type { ScreenId } from "../navigation/types";
+import { useColors } from "../theme";
+
+type IonName = ComponentProps<typeof Ionicons>["name"];
+
+type TabItem =
+  | { kind: "nav"; icon: IonName; label: string; screen: ScreenId }
+  | { kind: "speech"; label: string };
+
+const TABS: TabItem[] = [
+  { kind: "nav", icon: "home", label: "Home", screen: "home" },
+  { kind: "nav", icon: "grid-outline", label: "Services", screen: "services" },
+  { kind: "speech", label: "Talk" },
+  { kind: "nav", icon: "game-controller-outline", label: "Learn", screen: "game" },
+  { kind: "nav", icon: "person-outline", label: "Profile", screen: "profile" },
+];
+
+export const TAB_ROOT_SCREENS: ScreenId[] = ["home", "services", "game", "profile"];
+
+type Props = {
+  current: ScreenId;
+  onNav: (screen: ScreenId) => void;
+  onStartFlow: (flow: FlowId) => void;
+};
+
+export default function TabBar({ current, onNav, onStartFlow }: Props) {
+  const insets = useSafeAreaInsets();
+  const colors = useColors();
+
+  return (
+    <View
+      style={[
+        styles.tabBar,
+        { backgroundColor: colors.surface, paddingBottom: Math.max(insets.bottom, 12) },
+      ]}
+    >
+      {TABS.map((tab) => {
+        if (tab.kind === "speech") {
+          return (
+            <Pressable
+              key={tab.label}
+              onPress={() => onStartFlow("transfer")}
+              accessibilityLabel="Talk to send money"
+              hitSlop={6}
+              style={styles.tab}
+            >
+              <View style={[styles.speechIcon, { backgroundColor: colors.purple }]}>
+                <Icon name="mic" size={22} color={colors.white} />
+              </View>
+              <AppText variant="tab" numberOfLines={1} style={styles.tabLabel} color={colors.purple}>
+                {tab.label}
+              </AppText>
+            </Pressable>
+          );
+        }
+
+        const active = tab.screen === current;
+        return (
+          <Pressable
+            key={tab.label}
+            onPress={() => onNav(tab.screen)}
+            accessibilityLabel={tab.label}
+            accessibilityState={{ selected: active }}
+            hitSlop={6}
+            style={styles.tab}
+          >
+            <View
+              style={[styles.tabIcon, active && { backgroundColor: colors.purple }]}
+            >
+              <Icon name={tab.icon} size={22} color={active ? colors.white : colors.textSubtle} />
+            </View>
+            <AppText
+              variant="tab"
+              numberOfLines={1}
+              style={styles.tabLabel}
+              color={active ? colors.purple : colors.textSubtle}
+            >
+              {tab.label}
+            </AppText>
+          </Pressable>
+        );
+      })}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  tabBar: {
+    minHeight: 72,
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-around",
+    paddingHorizontal: 4,
+    paddingTop: 10,
+    flexShrink: 0,
+  },
+  tab: {
+    flex: 1,
+    alignItems: "center",
+    gap: 4,
+    paddingVertical: 2,
+    paddingHorizontal: 2,
+    minWidth: 0,
+  },
+  tabIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  speechIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: -10,
+  },
+  tabLabel: {
+    fontSize: 11,
+  },
+});

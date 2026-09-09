@@ -1,0 +1,133 @@
+import { useState } from "react";
+import { Pressable, StyleSheet, View } from "react-native";
+import { AppText, Button, Icon, IconWell, Screen, ScreenFooter } from "../components/ui";
+import { useAppPrefs } from "../context/AppPrefs";
+import type { AppLanguage } from "../content/flows";
+import { colors, radii, spacing } from "../theme";
+
+const LANGUAGES: {
+  code: AppLanguage;
+  name: string;
+  badge: string;
+  sample: string;
+}[] = [
+  { code: "tw", name: "Akan / Twi", badge: "TW", sample: "Yɛ ka Twi" },
+  { code: "ee", name: "Ewe", badge: "EE", sample: "Míawɔ Eʋegbe" },
+  { code: "en", name: "English", badge: "EN", sample: "We speak English" },
+];
+
+type Props = { onNext: () => void };
+
+export default function LanguageScreen({ onNext }: Props) {
+  const { language, setLanguage } = useAppPrefs();
+  const [selected, setSelected] = useState<AppLanguage>(language);
+
+  return (
+    <Screen background={colors.white} scroll>
+      <View style={styles.header}>
+        <AppText variant="titleLG">Choose your language</AppText>
+        <AppText variant="bodyMD" style={styles.sub}>
+          Aya will speak and understand you in this language — including mixing in English.
+        </AppText>
+      </View>
+
+      <View style={styles.list}>
+        {LANGUAGES.map((lang) => {
+          const active = selected === lang.code;
+          return (
+            <Pressable
+              key={lang.code}
+              onPress={() => setSelected(lang.code)}
+              accessibilityRole="button"
+              accessibilityState={{ selected: active }}
+              accessibilityLabel={`Select ${lang.name}`}
+              style={[styles.row, active && styles.rowActive]}
+            >
+              <IconWell backgroundColor={active ? colors.white : colors.washPurple} size={52} radius={18}>
+                <AppText variant="labelMD" color={colors.purple}>
+                  {lang.badge}
+                </AppText>
+              </IconWell>
+
+              <View style={styles.meta}>
+                <AppText variant="heading" numberOfLines={1}>
+                  {lang.name}
+                </AppText>
+                <AppText variant="bodySM" style={styles.sample} numberOfLines={1}>
+                  {lang.sample}
+                </AppText>
+              </View>
+
+              <View style={[styles.check, active ? styles.checkOn : styles.checkOff]}>
+                {active ? <Icon name="checkmark" size={16} color={colors.white} /> : null}
+              </View>
+            </Pressable>
+          );
+        })}
+      </View>
+
+      <ScreenFooter>
+        <Button
+          onPress={() => {
+            setLanguage(selected);
+            onNext();
+          }}
+        >
+          Continue
+        </Button>
+      </ScreenFooter>
+    </Screen>
+  );
+}
+
+const styles = StyleSheet.create({
+  header: {
+    paddingTop: spacing.xl,
+    paddingHorizontal: spacing.screenX,
+    flexShrink: 0,
+  },
+  sub: {
+    marginTop: spacing.sm,
+  },
+  list: {
+    flex: 1,
+    paddingHorizontal: spacing.screenX,
+    paddingVertical: spacing["2xl"],
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    minHeight: 84,
+    marginBottom: 12,
+    borderRadius: radii["2xl"],
+    paddingVertical: spacing.lg,
+    paddingHorizontal: spacing.xl,
+    backgroundColor: colors.surfaceCard,
+  },
+  rowActive: {
+    backgroundColor: colors.washPurple,
+  },
+  meta: {
+    flex: 1,
+    marginLeft: spacing.lg,
+    marginRight: spacing.md,
+    minWidth: 0,
+  },
+  sample: {
+    marginTop: 2,
+  },
+  check: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 0,
+  },
+  checkOn: {
+    backgroundColor: colors.purple,
+  },
+  checkOff: {
+    backgroundColor: colors.white,
+  },
+});
