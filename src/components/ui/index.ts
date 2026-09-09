@@ -14,4 +14,7 @@ export { default as Icon, MciIcon, FeatherIcon, IconWell } from "./Icon";
 export { default as Avatar } from "./Avatar";
 export { default as BrandLogo } from "./BrandLogo";
 export { default as VoiceWave } from "./VoiceWave";
+export { default as TextField } from "./TextField";
+export { default as PinDots } from "./PinDots";
+export { default as PinInput } from "./PinInput";
 export type { ButtonVariant } from "./Button";

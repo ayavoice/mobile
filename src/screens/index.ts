@@ -1,5 +1,11 @@
 export { default as SplashScreen } from "./SplashScreen";
 export { default as OnboardingScreen } from "./OnboardingScreen";
+export { default as AuthWelcomeScreen } from "./AuthWelcomeScreen";
+export { default as SignupScreen } from "./SignupScreen";
+export { default as LoginScreen } from "./LoginScreen";
+export { default as ForgotPinScreen } from "./ForgotPinScreen";
+export { default as OtpVerifyScreen } from "./OtpVerifyScreen";
+export { default as CreatePinScreen } from "./CreatePinScreen";
 export { default as LanguageScreen } from "./LanguageScreen";
 export { default as AccessibilitySetupScreen } from "./AccessibilitySetupScreen";
 export { default as HomeScreen } from "./HomeScreen";

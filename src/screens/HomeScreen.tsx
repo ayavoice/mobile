@@ -16,11 +16,82 @@ import Animated, {
   withSequence,
   withTiming,
 } from "react-native-reanimated";
+import Svg, { Circle, Path, Rect } from "react-native-svg";
 import { AppText, Avatar, Icon, MciIcon, Screen } from "../components/ui";
 import { ACCENT, brandImages } from "../content/brand";
 import type { FlowId } from "../content/flows";
 import type { ScreenId } from "../navigation/types";
-import { spacing, useColors, usePaletteStyles, type Palette } from "../theme";
+import { radii, spacing, useColors, usePaletteStyles, type Palette } from "../theme";
+
+type BannerIllustration = "voice" | "gift" | "shield";
+
+const ART_SIZE = 148;
+
+function VoiceIllustration() {
+  return (
+    <Svg width={ART_SIZE} height={ART_SIZE} viewBox="0 0 148 148">
+      <Circle cx={104} cy={40} r={54} fill="rgba(255,255,255,0.22)" />
+      <Circle cx={40} cy={108} r={30} fill="rgba(255,255,255,0.18)" />
+      <Circle cx={112} cy={118} r={9} fill="rgba(255,255,255,0.5)" />
+      <Circle cx={30} cy={40} r={5} fill="rgba(255,255,255,0.6)" />
+      <Circle cx={98} cy={98} r={44} fill="#FFFFFF" opacity={0.92} />
+      <Rect x={68} y={78} width={9} height={18} rx={4.5} fill={ACCENT} />
+      <Rect x={83} y={62} width={9} height={50} rx={4.5} fill={ACCENT} />
+      <Rect x={98} y={70} width={9} height={34} rx={4.5} fill={ACCENT} />
+      <Rect x={113} y={82} width={9} height={10} rx={4.5} fill={ACCENT} />
+    </Svg>
+  );
+}
+
+function GiftIllustration() {
+  return (
+    <Svg width={ART_SIZE} height={ART_SIZE} viewBox="0 0 148 148">
+      <Circle cx={100} cy={38} r={50} fill="rgba(255,255,255,0.2)" />
+      <Circle cx={36} cy={112} r={24} fill="rgba(255,255,255,0.18)" />
+      <Circle cx={124} cy={110} r={6} fill="rgba(255,255,255,0.55)" />
+      <Circle cx={26} cy={44} r={4} fill="rgba(255,255,255,0.6)" />
+      <Rect x={54} y={78} width={64} height={48} rx={8} fill="#FFFFFF" opacity={0.92} />
+      <Rect x={54} y={64} width={64} height={20} rx={8} fill={ACCENT} />
+      <Rect x={82} y={60} width={12} height={70} fill="rgba(255,255,255,0.6)" />
+      <Path d="M82 64c-9-4-15-19-5-22 9-2 12 13 5 22z" fill={ACCENT} />
+      <Path d="M94 64c9-4 15-19 5-22-9-2-12 13-5 22z" fill={ACCENT} />
+    </Svg>
+  );
+}
+
+function ShieldIllustration() {
+  return (
+    <Svg width={ART_SIZE} height={ART_SIZE} viewBox="0 0 148 148">
+      <Circle cx={102} cy={40} r={52} fill="rgba(255,255,255,0.2)" />
+      <Circle cx={34} cy={110} r={26} fill="rgba(255,255,255,0.18)" />
+      <Circle cx={30} cy={40} r={5} fill="rgba(255,255,255,0.6)" />
+      <Circle cx={122} cy={104} r={7} fill="rgba(255,255,255,0.5)" />
+      <Path
+        d="M84 46 L118 60 V88 C118 112 102 128 84 135 C66 128 50 112 50 88 V60 Z"
+        fill="#FFFFFF"
+        opacity={0.92}
+      />
+      <Path
+        d="M84 58 L108 68 V88 C108 105 96 116 84 122 C72 116 60 105 60 88 V68 Z"
+        fill={ACCENT}
+      />
+      <Path
+        d="M74 89l7 7 15-16"
+        stroke="#FFFFFF"
+        strokeWidth={5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+    </Svg>
+  );
+}
+
+function BannerArt({ kind }: { kind: BannerIllustration }) {
+  if (kind === "voice") return <VoiceIllustration />;
+  if (kind === "gift") return <GiftIllustration />;
+  return <ShieldIllustration />;
+}
 
 type Props = {
   onNav: (screen: ScreenId) => void;
@@ -42,6 +113,34 @@ const QUICK_SEND = [
   { name: "Sourabh", image: brandImages.sourabh },
   { name: "Aisha", image: brandImages.aisha },
 ];
+
+const BANNER_WIDTH = 280;
+const BANNER_HEIGHT = 112;
+const BANNER_GAP = 12;
+
+function bannersFor(colors: Palette): {
+  illustration: BannerIllustration;
+  title: string;
+  bg: string;
+}[] {
+  return [
+    {
+      illustration: "voice",
+      title: "Send with just your voice",
+      bg: colors.washPurple,
+    },
+    {
+      illustration: "gift",
+      title: "Invite friends, earn GH₵20",
+      bg: colors.washBlue,
+    },
+    {
+      illustration: "shield",
+      title: "Your PIN stays yours",
+      bg: colors.washGreen,
+    },
+  ];
+}
 
 const MIC_WAVE_BARS = [
   { h: 16, delay: 0 },
@@ -102,6 +201,7 @@ export default function HomeScreen({ onNav, onStartFlow }: Props) {
   const colors = useColors();
   const styles = usePaletteStyles(createHomeStyles);
   const [selectedSend, setSelectedSend] = useState("Mansi");
+  const BANNERS = bannersFor(colors);
 
   return (
     <Screen style={styles.root} safeBottom={false}>
@@ -130,7 +230,7 @@ export default function HomeScreen({ onNav, onStartFlow }: Props) {
           <View style={styles.headerActions}>
             <Pressable
               onPress={() =>
-                Alert.alert("Notifications", "You're all caught up — no new notifications.")
+                Alert.alert("Notifications", "You're all caught up, no new notifications.")
               }
               accessibilityLabel="Notifications"
               hitSlop={8}
@@ -226,6 +326,28 @@ export default function HomeScreen({ onNav, onStartFlow }: Props) {
           </View>
           <AppText variant="amount">-$14.90</AppText>
         </Pressable>
+
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          decelerationRate="fast"
+          snapToInterval={BANNER_WIDTH + BANNER_GAP}
+          snapToAlignment="start"
+          contentContainerStyle={styles.bannerRow}
+        >
+          {BANNERS.map((banner, i) => (
+            <View key={i} style={[styles.bannerCard, { backgroundColor: banner.bg }]}>
+              <View style={styles.bannerText}>
+                <AppText variant="labelLG" color={colors.text}>
+                  {banner.title}
+                </AppText>
+              </View>
+              <View style={styles.bannerArt}>
+                <BannerArt kind={banner.illustration} />
+              </View>
+            </View>
+          ))}
+        </ScrollView>
 
         <View style={styles.quickHead}>
           <AppText variant="headingSM">Quick send </AppText>
@@ -352,6 +474,30 @@ function createHomeStyles(colors: Palette) {
   micPressed: {
     opacity: 0.88,
   },
+  bannerRow: {
+    gap: BANNER_GAP,
+    paddingRight: 8,
+    marginBottom: spacing["2xl"],
+  },
+  bannerCard: {
+    width: BANNER_WIDTH,
+    height: BANNER_HEIGHT,
+    borderRadius: radii["2xl"],
+    overflow: "hidden",
+  },
+  bannerText: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    padding: spacing.lg,
+    maxWidth: BANNER_WIDTH - 70,
+  },
+  bannerArt: {
+    position: "absolute",
+    right: -28,
+    bottom: -30,
+  },
   sectionTitle: {
     marginBottom: spacing.md,
   },
@@ -391,6 +537,7 @@ function createHomeStyles(colors: Palette) {
   quickHead: {
     flexDirection: "row",
     alignItems: "baseline",
+    gap: spacing.xs,
     marginBottom: spacing.md,
   },
   quickItem: {

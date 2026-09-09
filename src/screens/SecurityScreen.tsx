@@ -59,8 +59,8 @@ export default function SecurityScreen({ onBack }: Props) {
               style={styles.statusText}
             >
               {biometric
-                ? "Biometrics ON — money moves only after private device auth"
-                : "Biometrics OFF — less secure"}
+                ? "Biometrics ON, money moves only after private device auth"
+                : "Biometrics OFF, less secure"}
             </AppText>
           </View>
         </Card>

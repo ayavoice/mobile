@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import {
   View,
   ScrollView,
+  KeyboardAvoidingView,
   StyleSheet,
   StyleProp,
   ViewStyle,
@@ -73,7 +74,12 @@ export default function Screen({
       style={[styles.root, { backgroundColor: resolvedBg }, style]}
       edges={[...edges]}
     >
-      {body}
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+      >
+        {body}
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

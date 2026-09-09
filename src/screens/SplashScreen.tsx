@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { AppText, BrandLogo } from "../components/ui";
+import { BrandLogo } from "../components/ui";
 import { spacing, useColors } from "../theme";
 
 type Props = { onNext: () => void };
@@ -31,14 +31,6 @@ export default function SplashScreen({ onNext }: Props) {
     >
       <BrandLogo height={92} />
 
-      <AppText variant="overlineBrand" align="center" color={colors.textSubtle}>
-        Voice enabled finance
-      </AppText>
-
-      <AppText variant="tagline" align="center" color={colors.text} style={styles.tagline}>
-        {"Your money.\nYour language.\nYour independence."}
-      </AppText>
-
       <View style={[styles.dots, { bottom: Math.max(insets.bottom, 16) + 24 }]}>
         {[0, 1, 2].map((i) => (
           <View
@@ -63,9 +55,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: spacing["3xl"],
     paddingHorizontal: spacing["5xl"],
-  },
-  tagline: {
-    opacity: 0.92,
   },
   dots: {
     position: "absolute",

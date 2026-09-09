@@ -52,7 +52,7 @@ export default function BiometricScreen({ onSuccess, onBack }: Props) {
 
         <View>
           <AppText variant="body" align="center" style={styles.sub}>
-            Never speak your PIN — use fingerprint, face, or device unlock.
+            Never speak your PIN, use fingerprint, face, or device unlock.
           </AppText>
         </View>
 
@@ -98,7 +98,7 @@ export default function BiometricScreen({ onSuccess, onBack }: Props) {
         <View style={styles.warn}>
           <Icon name="warning" size={18} color={colors.warningDark} />
           <AppText variant="bodyXS" color={colors.warningDark} style={styles.textFlex}>
-            Device unlock is your phone lock — not your Mobile Money PIN or OTP.
+            Device unlock is your phone lock, not your Mobile Money PIN or OTP.
           </AppText>
         </View>
       </ScrollView>

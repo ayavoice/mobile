@@ -48,24 +48,29 @@ export default function HistoryScreen({ onBack }: Props) {
       </ScrollView>
 
       <ScrollView contentContainerStyle={styles.list} showsVerticalScrollIndicator={false}>
-        {items.map((tx) => (
-          <View key={`${tx.label}-${tx.date}`} style={styles.card}>
-            <IconWell backgroundColor={tx.color} size={48} radius={16}>
-              <Icon name={tx.icon} size={22} color={colors.purple} />
-            </IconWell>
-            <View style={styles.flex}>
-              <AppText variant="labelSM" numberOfLines={1}>
-                {tx.label}
-              </AppText>
-              <AppText variant="caption" numberOfLines={1}>
-                {tx.sub} · {tx.date}
+        <View style={styles.table}>
+          {items.map((tx, i) => (
+            <View
+              key={`${tx.label}-${tx.date}`}
+              style={[styles.row, i < items.length - 1 && styles.rowDivider]}
+            >
+              <IconWell backgroundColor={tx.color} size={44} radius={14}>
+                <Icon name={tx.icon} size={20} color={colors.purple} />
+              </IconWell>
+              <View style={styles.flex}>
+                <AppText variant="labelSM" numberOfLines={1}>
+                  {tx.label}
+                </AppText>
+                <AppText variant="caption" numberOfLines={1}>
+                  {tx.sub} · {tx.date}
+                </AppText>
+              </View>
+              <AppText variant="amount" color={tx.type === "received" ? colors.success : colors.text}>
+                {tx.amount}
               </AppText>
             </View>
-            <AppText variant="amount" color={tx.type === "received" ? colors.success : colors.text}>
-              {tx.amount}
-            </AppText>
-          </View>
-        ))}
+          ))}
+        </View>
       </ScrollView>
     </Screen>
   );
@@ -93,14 +98,20 @@ function createHistoryStyles(colors: Palette) {
   list: {
     padding: spacing.xl,
   },
-  card: {
+  table: {
     backgroundColor: colors.surfaceCard,
     borderRadius: radii.xl,
-    padding: spacing.lg,
-    marginBottom: 10,
+    paddingHorizontal: spacing.lg,
+  },
+  row: {
     flexDirection: "row" as const,
     alignItems: "center" as const,
     gap: 14,
+    paddingVertical: spacing.lg,
+  },
+  rowDivider: {
+    borderBottomWidth: 1,
+    borderBottomColor: colors.borderMuted,
   },
   flex: { flex: 1, minWidth: 0 },
   };

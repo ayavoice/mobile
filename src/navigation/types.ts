@@ -1,6 +1,12 @@
 export type ScreenId =
   | "splash"
   | "onboarding"
+  | "auth-welcome"
+  | "signup"
+  | "login"
+  | "forgot-pin"
+  | "otp-verify"
+  | "create-pin"
   | "language"
   | "accessibility-setup"
   | "home"

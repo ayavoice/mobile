@@ -14,7 +14,7 @@ function slidesFor(): {
     },
     {
       title: "Use your language",
-      body: "Akan/Twi, Ewe, or English — Aya understands you in the language you are most comfortable with.",
+      body: "Akan/Twi, Ewe, or English, Aya understands you in the language you are most comfortable with.",
     },
     {
       title: "Authenticate privately",

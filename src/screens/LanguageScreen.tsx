@@ -29,7 +29,7 @@ export default function LanguageScreen({ onNext }: Props) {
       <View style={styles.header}>
         <AppText variant="titleLG">Choose your language</AppText>
         <AppText variant="bodyMD" style={styles.sub}>
-          Aya will speak and understand you in this language — including mixing in English.
+          Aya will speak and understand you in this language, including mixing in English.
         </AppText>
       </View>
 

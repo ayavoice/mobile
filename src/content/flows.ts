@@ -37,7 +37,7 @@ const LANG_LABEL: Record<AppLanguage, string> = {
 const TRANSFER: Record<AppLanguage, FlowContent> = {
   tw: {
     intentLabel: "SEND MONEY",
-    listenHint: "Speak naturally in Akan/Twi — code-switching is fine",
+    listenHint: "Speak naturally in Akan/Twi, code-switching is fine",
     utterance: {
       languageLabel: LANG_LABEL.tw,
       transcript: "Make a transaction of $580 from my balance",
@@ -71,7 +71,7 @@ const TRANSFER: Record<AppLanguage, FlowContent> = {
   },
   ee: {
     intentLabel: "SEND MONEY",
-    listenHint: "Speak naturally in Ewe — mixed English is fine",
+    listenHint: "Speak naturally in Ewe, mixed English is fine",
     utterance: {
       languageLabel: LANG_LABEL.ee,
       transcript: "Make a transaction of $580 from my balance",
@@ -105,7 +105,7 @@ const TRANSFER: Record<AppLanguage, FlowContent> = {
   },
   en: {
     intentLabel: "SEND MONEY",
-    listenHint: "Speak naturally — mix Twi or Ewe if you want",
+    listenHint: "Speak naturally, mix Twi or Ewe if you want",
     utterance: {
       languageLabel: LANG_LABEL.en,
       transcript: "Make a transaction of $580 from my balance",

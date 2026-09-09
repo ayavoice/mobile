@@ -57,7 +57,7 @@ export default function UnderstandingScreen({ onConfirm, onBack }: Props) {
             <Icon name="volume-high" size={18} color={colors.purple} />
           </IconWell>
           <AppText variant="bodyXS" style={styles.noteText}>
-            Aya will read this aloud. You'll confirm with fingerprint, face, or device unlock — never your PIN.
+            Aya will read this aloud. You'll confirm with fingerprint, face, or device unlock, never your PIN.
           </AppText>
         </View>
       </ScrollView>

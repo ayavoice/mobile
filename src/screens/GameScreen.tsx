@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pressable, View } from "react-native";
 import type { ComponentProps } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -8,6 +8,7 @@ import { radii, spacing, useColors, usePaletteStyles, type Palette } from "../th
 type Props = { onBack: () => void };
 type IonName = ComponentProps<typeof Ionicons>["name"];
 type GameId = "phrase" | "scam";
+type GameProgress = { best: number; total: number };
 
 type QuizQuestion = {
   id: string;
@@ -16,6 +17,51 @@ type QuizQuestion = {
   options: { label: string; correct: boolean }[];
   explanation: string;
 };
+
+const OPTION_LETTERS = ["A", "B", "C", "D"];
+
+function darken(hex: string, amount: number): string {
+  const clean = hex.replace("#", "");
+  const num = parseInt(clean, 16);
+  const r = Math.max(0, (num >> 16) - amount);
+  const g = Math.max(0, ((num >> 8) & 0xff) - amount);
+  const b = Math.max(0, (num & 0xff) - amount);
+  return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, "0")}`;
+}
+
+function starsFor(score: number, total: number): number {
+  if (total === 0) return 0;
+  const pct = score / total;
+  if (pct >= 1) return 3;
+  if (pct >= 0.6) return 2;
+  if (score > 0) return 1;
+  return 0;
+}
+
+function StarRow({
+  count,
+  size = 16,
+  filledColor,
+  emptyColor,
+}: {
+  count: number;
+  size?: number;
+  filledColor: string;
+  emptyColor: string;
+}) {
+  return (
+    <View style={{ flexDirection: "row", gap: 2 }}>
+      {[0, 1, 2].map((i) => (
+        <Icon
+          key={i}
+          name={i < count ? "star" : "star-outline"}
+          size={size}
+          color={i < count ? filledColor : emptyColor}
+        />
+      ))}
+    </View>
+  );
+}
 
 const PHRASE_BANK: { languageLabel: string; transcript: string; gloss: string }[] = [
   { languageLabel: "Twi", transcript: "Me pɛ sɛ me sendi GH₵150 ma Kwame", gloss: "I want to send GH₵150 to Kwame" },
@@ -35,7 +81,7 @@ const SCAM_BANK: { scenario: string; isScam: boolean; explanation: string }[] = 
   {
     scenario: "Aya reads back \"You are about to send GH₵150 to Kwame. Say continue or cancel\" before sending.",
     isScam: false,
-    explanation: "This is Aya's normal spoken confirmation — it happens before every transaction.",
+    explanation: "This is Aya's normal spoken confirmation, it happens before every transaction.",
   },
   {
     scenario: "A text message says you won a promo and asks you to reply with your 4-digit MoMo PIN to claim GH₵1000.",
@@ -104,7 +150,8 @@ function gamesFor(colors: Palette): {
   icon: IonName;
   title: string;
   desc: string;
-  color: string;
+  wash: string;
+  accent: string;
   build: () => QuizQuestion[];
 }[] {
   return [
@@ -113,7 +160,8 @@ function gamesFor(colors: Palette): {
       icon: "chatbubbles",
       title: "Phrase Match",
       desc: "Hear a Twi/Ewe money phrase, pick what it means",
-      color: colors.washPurple,
+      wash: colors.washPurple,
+      accent: colors.purple,
       build: buildPhraseQuestions,
     },
     {
@@ -121,7 +169,8 @@ function gamesFor(colors: Palette): {
       icon: "shield-checkmark",
       title: "Spot the Scam",
       desc: "Safe or scam? Practice spotting PIN and OTP tricks",
-      color: colors.washGreen,
+      wash: colors.washGreen,
+      accent: colors.successMid,
       build: buildScamQuestions,
     },
   ];
@@ -130,13 +179,17 @@ function gamesFor(colors: Palette): {
 function QuizPlayer({
   title,
   build,
+  bestScore,
   onExit,
+  onFinish,
   colors,
   styles,
 }: {
   title: string;
   build: () => QuizQuestion[];
+  bestScore: number;
   onExit: () => void;
+  onFinish: (score: number, total: number) => void;
   colors: Palette;
   styles: ReturnType<typeof createGameStyles>;
 }) {
@@ -148,37 +201,56 @@ function QuizPlayer({
   const question = questions[index];
   const done = index >= questions.length;
 
+  useEffect(() => {
+    if (done) onFinish(score, questions.length);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [done]);
+
   if (done) {
     const pct = Math.round((score / questions.length) * 100);
+    const stars = starsFor(score, questions.length);
+    const isNewBest = score > 0 && score > bestScore;
     return (
       <Card style={styles.resultCard}>
-        <IconWell backgroundColor={colors.washPurple} size={56} radius={20}>
-          <Icon name="trophy" size={26} color={colors.purple} />
-        </IconWell>
+        <StarRow count={stars} size={40} filledColor={colors.warning} emptyColor={colors.borderMuted} />
         <AppText variant="titleSM" align="center" style={styles.resultTitle}>
           {score} / {questions.length} correct
         </AppText>
+        {isNewBest ? (
+          <View style={styles.newBestChip}>
+            <Icon name="sparkles" size={14} color={colors.purple} />
+            <AppText variant="labelXS" color={colors.purple}>
+              New best!
+            </AppText>
+          </View>
+        ) : null}
         <AppText variant="bodySM" align="center">
           {pct >= 80
-            ? "Great work — that's stuck!"
+            ? "Great work, that's stuck!"
             : pct >= 50
               ? "Good start, try again for a better score."
               : "Practice a bit more and try again."}
         </AppText>
-        <Pressable
-          style={styles.primaryBtn}
-          onPress={() => {
-            setQuestions(build());
-            setIndex(0);
-            setScore(0);
-            setSelected(null);
-          }}
-          accessibilityRole="button"
-        >
-          <AppText variant="labelMD" color={colors.white}>
-            Play again
-          </AppText>
-        </Pressable>
+        <View style={[styles.chunkyWrap, { backgroundColor: darken(colors.purple, 40) }]}>
+          <Pressable
+            style={({ pressed }) => [
+              styles.chunkyBase,
+              { backgroundColor: colors.purple, marginBottom: pressed ? 0 : 4, marginTop: pressed ? 4 : 0 },
+            ]}
+            onPress={() => {
+              setQuestions(build());
+              setIndex(0);
+              setScore(0);
+              setSelected(null);
+            }}
+            accessibilityRole="button"
+          >
+            <Icon name="refresh" size={18} color={colors.white} />
+            <AppText variant="labelMD" color={colors.white}>
+              Play again
+            </AppText>
+          </Pressable>
+        </View>
         <Pressable style={styles.secondaryBtn} onPress={onExit} accessibilityRole="button">
           <AppText variant="labelMD">Back to games</AppText>
         </Pressable>
@@ -190,13 +262,28 @@ function QuizPlayer({
 
   return (
     <Card style={styles.quizCard}>
-      <View style={styles.quizHead}>
+      <View style={styles.quizTopRow}>
+        <View style={styles.progressTrack}>
+          <View
+            style={[
+              styles.progressFill,
+              { width: `${(index / questions.length) * 100}%`, backgroundColor: colors.purple },
+            ]}
+          />
+        </View>
+        <Pressable onPress={onExit} accessibilityRole="button" accessibilityLabel="Exit game" hitSlop={8}>
+          <Icon name="close" size={20} color={colors.textSubtle} />
+        </Pressable>
+      </View>
+
+      <View style={styles.quizMetaRow}>
         <AppText variant="caption">
           {title} · {index + 1} of {questions.length}
         </AppText>
-        <Pressable onPress={onExit} accessibilityRole="button" accessibilityLabel="Exit game">
-          <Icon name="close" size={20} color={colors.textSubtle} />
-        </Pressable>
+        <View style={styles.scoreChip}>
+          <Icon name="star" size={13} color={colors.warning} />
+          <AppText variant="labelXS">{score}</AppText>
+        </View>
       </View>
 
       {question.meta ? (
@@ -232,7 +319,23 @@ function QuizPlayer({
                 showWrong && styles.optionWrong,
               ]}
             >
-              <AppText variant="labelMD">{opt.label}</AppText>
+              <View style={styles.optionLeft}>
+                <View
+                  style={[
+                    styles.optionIndex,
+                    showCorrect && { backgroundColor: colors.successMid },
+                    showWrong && { backgroundColor: colors.danger },
+                  ]}
+                >
+                  <AppText
+                    variant="labelXS"
+                    color={showCorrect || showWrong ? colors.white : colors.textSubtle}
+                  >
+                    {OPTION_LETTERS[i]}
+                  </AppText>
+                </View>
+                <AppText variant="labelMD">{opt.label}</AppText>
+              </View>
               {showCorrect ? <Icon name="checkmark-circle" size={20} color={colors.successDark} /> : null}
               {showWrong ? <Icon name="close-circle" size={20} color={colors.danger} /> : null}
             </Pressable>
@@ -245,18 +348,24 @@ function QuizPlayer({
           <AppText variant="bodySM" style={styles.explanation}>
             {question.explanation}
           </AppText>
-          <Pressable
-            style={styles.primaryBtn}
-            onPress={() => {
-              setSelected(null);
-              setIndex((i) => i + 1);
-            }}
-            accessibilityRole="button"
-          >
-            <AppText variant="labelMD" color={colors.white}>
-              {index + 1 === questions.length ? "See results" : "Next"}
-            </AppText>
-          </Pressable>
+          <View style={[styles.chunkyWrap, { backgroundColor: darken(colors.purple, 40) }]}>
+            <Pressable
+              style={({ pressed }) => [
+                styles.chunkyBase,
+                { backgroundColor: colors.purple, marginBottom: pressed ? 0 : 4, marginTop: pressed ? 4 : 0 },
+              ]}
+              onPress={() => {
+                setSelected(null);
+                setIndex((i) => i + 1);
+              }}
+              accessibilityRole="button"
+            >
+              <AppText variant="labelMD" color={colors.white}>
+                {index + 1 === questions.length ? "See results" : "Next"}
+              </AppText>
+              <Icon name="arrow-forward" size={18} color={colors.white} />
+            </Pressable>
+          </View>
         </>
       ) : null}
     </Card>
@@ -267,8 +376,23 @@ export default function GameScreen({ onBack }: Props) {
   const colors = useColors();
   const styles = usePaletteStyles(createGameStyles);
   const [activeGame, setActiveGame] = useState<GameId | null>(null);
+  const [progress, setProgress] = useState<Record<GameId, GameProgress>>({
+    phrase: { best: 0, total: 0 },
+    scam: { best: 0, total: 0 },
+  });
   const GAMES = gamesFor(colors);
   const active = GAMES.find((g) => g.id === activeGame) ?? null;
+  const totalStars = GAMES.reduce(
+    (sum, g) => sum + starsFor(progress[g.id].best, progress[g.id].total),
+    0,
+  );
+
+  const handleFinish = (id: GameId, score: number, total: number) => {
+    setProgress((p) => ({
+      ...p,
+      [id]: { best: Math.max(p[id].best, score), total },
+    }));
+  };
 
   return (
     <Screen background={colors.white} scroll safeBottom={false}>
@@ -283,41 +407,87 @@ export default function GameScreen({ onBack }: Props) {
             key={active.id}
             title={active.title}
             build={active.build}
+            bestScore={progress[active.id].best}
             onExit={() => setActiveGame(null)}
+            onFinish={(score, total) => handleFinish(active.id, score, total)}
             colors={colors}
             styles={styles}
           />
         ) : (
           <>
-            <AppText variant="headingSM" style={styles.section}>
-              Mini games
-            </AppText>
+            <View style={styles.sectionHead}>
+              <View style={styles.sectionHeadTitle}>
+                <Icon name="game-controller" size={20} color={colors.purple} />
+                <AppText variant="headingSM">Mini games</AppText>
+              </View>
+              <View style={styles.totalStarsChip}>
+                <Icon name="star" size={14} color={colors.warning} />
+                <AppText variant="labelXS">{totalStars}/{GAMES.length * 3}</AppText>
+              </View>
+            </View>
             <AppText variant="bodySM" style={styles.sectionHint}>
               Quick, offline games to build your voice-money confidence.
             </AppText>
-            {GAMES.map((game) => (
-              <Pressable
-                key={game.id}
-                onPress={() => setActiveGame(game.id)}
-                accessibilityRole="button"
-                accessibilityLabel={`Play ${game.title}`}
-              >
-                <Card style={styles.gameRow}>
-                  <IconWell backgroundColor={game.color} size={48} radius={16}>
-                    <Icon name={game.icon} size={22} color={colors.purple} />
-                  </IconWell>
-                  <View style={styles.flex}>
-                    <AppText variant="labelMD">{game.title}</AppText>
-                    <AppText variant="caption">{game.desc}</AppText>
-                  </View>
-                  <View style={styles.playBtn}>
-                    <AppText variant="labelXS" color={colors.white}>
-                      Play
-                    </AppText>
-                  </View>
-                </Card>
-              </Pressable>
-            ))}
+
+            {GAMES.map((game) => {
+              const gp = progress[game.id];
+              const stars = starsFor(gp.best, gp.total);
+              const played = gp.total > 0;
+              const edge = darken(game.accent, 40);
+              return (
+                <Pressable
+                  key={game.id}
+                  onPress={() => setActiveGame(game.id)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Play ${game.title}. ${
+                    played ? `Best score ${gp.best} of ${gp.total}.` : "Not played yet."
+                  }`}
+                >
+                  {({ pressed }) => (
+                    <Card style={styles.gameCard}>
+                      <View style={styles.gameCardTop}>
+                        <IconWell backgroundColor={game.accent} size={52} radius={18}>
+                          <Icon name={game.icon} size={24} color={colors.white} />
+                        </IconWell>
+                        <View style={styles.flex}>
+                          <AppText variant="labelLG">{game.title}</AppText>
+                          <AppText variant="caption">{game.desc}</AppText>
+                        </View>
+                      </View>
+                      <View style={styles.gameCardFooter}>
+                        <View style={styles.gameCardMeta}>
+                          <StarRow
+                            count={stars}
+                            filledColor={colors.warning}
+                            emptyColor={colors.borderMuted}
+                          />
+                          <AppText variant="caption" color={colors.textSubtle}>
+                            {played ? `Best ${gp.best}/${gp.total}` : "Not played yet"}
+                          </AppText>
+                        </View>
+                        <View style={[styles.playPillEdge, { backgroundColor: edge }]}>
+                          <View
+                            style={[
+                              styles.playPillTop,
+                              {
+                                backgroundColor: game.accent,
+                                marginTop: pressed ? 3 : 0,
+                                marginBottom: pressed ? 0 : 3,
+                              },
+                            ]}
+                          >
+                            <Icon name="play" size={14} color={colors.white} />
+                            <AppText variant="labelSM" color={colors.white}>
+                              Play
+                            </AppText>
+                          </View>
+                        </View>
+                      </View>
+                    </Card>
+                  )}
+                </Pressable>
+              );
+            })}
           </>
         )}
       </View>
@@ -335,34 +505,91 @@ function createGameStyles(colors: Palette) {
     flex: 1,
     minWidth: 0,
   },
-  section: {
-    marginTop: 0,
+  sectionHead: {
+    flexDirection: "row" as const,
+    alignItems: "center" as const,
+    justifyContent: "space-between" as const,
+  },
+  sectionHeadTitle: {
+    flexDirection: "row" as const,
+    alignItems: "center" as const,
+    gap: spacing.sm,
+  },
+  totalStarsChip: {
+    flexDirection: "row" as const,
+    alignItems: "center" as const,
+    gap: 4,
+    backgroundColor: colors.surfaceCard,
+    borderRadius: radii.full,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
   },
   sectionHint: {
-    marginTop: -spacing.sm,
+    marginTop: -spacing.xs,
     marginBottom: spacing.xs,
   },
-  gameRow: {
-    flexDirection: "row",
-    alignItems: "center",
+  gameCard: {
+    gap: spacing.lg,
+  },
+  gameCardTop: {
+    flexDirection: "row" as const,
+    alignItems: "center" as const,
     gap: 14,
   },
-  playBtn: {
-    backgroundColor: colors.purple,
+  gameCardFooter: {
+    flexDirection: "row" as const,
+    alignItems: "center" as const,
+    justifyContent: "space-between" as const,
+  },
+  gameCardMeta: {
+    gap: 4,
+  },
+  playPillEdge: {
     borderRadius: radii.full,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+  },
+  playPillTop: {
+    flexDirection: "row" as const,
+    alignItems: "center" as const,
+    gap: 6,
+    borderRadius: radii.full,
+    paddingVertical: 9,
+    paddingHorizontal: 18,
   },
   quizCard: {
     gap: spacing.md,
   },
-  quizHead: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+  quizTopRow: {
+    flexDirection: "row" as const,
+    alignItems: "center" as const,
+    gap: spacing.md,
+  },
+  progressTrack: {
+    flex: 1,
+    height: 8,
+    borderRadius: radii.full,
+    backgroundColor: colors.surfaceGhost,
+    overflow: "hidden" as const,
+  },
+  progressFill: {
+    height: "100%" as const,
+    borderRadius: radii.full,
+  },
+  quizMetaRow: {
+    flexDirection: "row" as const,
+    alignItems: "center" as const,
+    justifyContent: "space-between" as const,
+  },
+  scoreChip: {
+    flexDirection: "row" as const,
+    alignItems: "center" as const,
+    gap: 4,
+    backgroundColor: colors.surfaceCard,
+    borderRadius: radii.full,
+    paddingVertical: 4,
+    paddingHorizontal: 10,
   },
   langChip: {
-    alignSelf: "flex-start",
+    alignSelf: "flex-start" as const,
     backgroundColor: colors.purple,
     borderRadius: radii.full,
     paddingVertical: 4,
@@ -375,13 +602,27 @@ function createGameStyles(colors: Palette) {
     gap: spacing.sm,
   },
   option: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: "row" as const,
+    alignItems: "center" as const,
+    justifyContent: "space-between" as const,
     backgroundColor: colors.surfaceCard,
     borderRadius: radii.lg,
-    paddingVertical: 14,
+    paddingVertical: 12,
     paddingHorizontal: spacing.lg,
+  },
+  optionLeft: {
+    flexDirection: "row" as const,
+    alignItems: "center" as const,
+    gap: 12,
+    flexShrink: 1,
+  },
+  optionIndex: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    alignItems: "center" as const,
+    justifyContent: "center" as const,
+    backgroundColor: colors.surfaceGhost,
   },
   optionCorrect: {
     backgroundColor: colors.successSurface,
@@ -392,22 +633,36 @@ function createGameStyles(colors: Palette) {
   explanation: {
     color: colors.textSecondary,
   },
-  primaryBtn: {
-    backgroundColor: colors.purple,
+  chunkyWrap: {
+    borderRadius: radii["2xl"],
+  },
+  chunkyBase: {
+    flexDirection: "row" as const,
+    alignItems: "center" as const,
+    justifyContent: "center" as const,
+    gap: spacing.sm,
     borderRadius: radii["2xl"],
     paddingVertical: 14,
-    alignItems: "center",
   },
   secondaryBtn: {
-    alignItems: "center",
+    alignItems: "center" as const,
     paddingVertical: 10,
   },
   resultCard: {
-    alignItems: "center",
+    alignItems: "center" as const,
     gap: spacing.sm,
   },
   resultTitle: {
     marginTop: spacing.xs,
+  },
+  newBestChip: {
+    flexDirection: "row" as const,
+    alignItems: "center" as const,
+    gap: 4,
+    backgroundColor: colors.washPurple,
+    borderRadius: radii.full,
+    paddingVertical: 4,
+    paddingHorizontal: 12,
   },
   };
 }

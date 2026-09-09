@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { ActivityIndicator, Platform, StyleSheet, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -12,6 +12,12 @@ import { ThemeProvider, useColors, useTheme } from "./src/theme";
 import {
   SplashScreen,
   OnboardingScreen,
+  AuthWelcomeScreen,
+  SignupScreen,
+  LoginScreen,
+  ForgotPinScreen,
+  OtpVerifyScreen,
+  CreatePinScreen,
   LanguageScreen,
   AccessibilitySetupScreen,
   HomeScreen,
@@ -37,9 +43,11 @@ import {
 function AppNavigator() {
   const { setActiveFlow, activeFlow } = useAppPrefs();
   const { screen, go, back, resetTo } = useAppNavigation("splash");
+  const [authMode, setAuthMode] = useState<"signup" | "reset">("signup");
+  const [pendingPhone, setPendingPhone] = useState("");
 
   const goHome = useCallback(() => resetTo("home"), [resetTo]);
-  const logout = useCallback(() => resetTo("splash"), [resetTo]);
+  const logout = useCallback(() => resetTo("login"), [resetTo]);
 
   const startFlow = useCallback(
     (flow: FlowId) => {
@@ -58,7 +66,61 @@ function AppNavigator() {
       content = <SplashScreen onNext={() => go("onboarding")} />;
       break;
     case "onboarding":
-      content = <OnboardingScreen onNext={() => go("language")} />;
+      content = <OnboardingScreen onNext={() => go("auth-welcome")} />;
+      break;
+    case "auth-welcome":
+      content = (
+        <AuthWelcomeScreen onSignup={() => go("signup")} onLogin={() => go("login")} />
+      );
+      break;
+    case "signup":
+      content = (
+        <SignupScreen
+          onNext={(phone) => {
+            setPendingPhone(phone);
+            setAuthMode("signup");
+            go("otp-verify");
+          }}
+          onBack={back}
+          onLogin={() => go("login")}
+        />
+      );
+      break;
+    case "login":
+      content = (
+        <LoginScreen
+          onNext={goHome}
+          onBack={back}
+          onForgotPin={() => go("forgot-pin")}
+          onSignup={() => go("signup")}
+        />
+      );
+      break;
+    case "forgot-pin":
+      content = (
+        <ForgotPinScreen
+          onNext={(phone) => {
+            setPendingPhone(phone);
+            setAuthMode("reset");
+            go("otp-verify");
+          }}
+          onBack={back}
+        />
+      );
+      break;
+    case "otp-verify":
+      content = (
+        <OtpVerifyScreen phone={pendingPhone} onVerified={() => go("create-pin")} onBack={back} />
+      );
+      break;
+    case "create-pin":
+      content = (
+        <CreatePinScreen
+          mode={authMode}
+          onDone={() => go(authMode === "signup" ? "language" : "home")}
+          onBack={back}
+        />
+      );
       break;
     case "language":
       content = <LanguageScreen onNext={() => go("accessibility-setup")} />;
