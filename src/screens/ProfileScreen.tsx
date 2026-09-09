@@ -6,10 +6,21 @@ import { brandImages } from "../content/brand";
 import { useAppPrefs } from "../context/AppPrefs";
 import { languageDisplayName } from "../content/flows";
 import type { ScreenId } from "../navigation/types";
-import { colors, spacing } from "../theme";
+import { colors, spacing, useColors, type Palette } from "../theme";
 
 type Props = { onBack: () => void; onNav: (screen: ScreenId) => void; onLogout: () => void };
 type IonName = ComponentProps<typeof Ionicons>["name"];
+
+function badgesFor(
+  palette: Palette,
+): { icon: IonName; label: string; desc: string; color: string; earned: boolean }[] {
+  return [
+    { icon: "mic", label: "First voice command", desc: "Completed a spoken flow with Aya", color: palette.washYellow, earned: true },
+    { icon: "shield-checkmark", label: "PIN never spoken", desc: "Confirmed with biometrics, not your voice", color: palette.washGreen, earned: true },
+    { icon: "swap-horizontal", label: "Code-switch pro", desc: "Mixed Akan/Ewe/English in one sentence", color: palette.washPurple, earned: true },
+    { icon: "trending-up", label: "5 flows in a week", desc: "Used Aya for money 5 times this week", color: palette.washBlue, earned: false },
+  ];
+}
 
 const LINKS: { icon: IonName; label: string; desc: string; screen: ScreenId }[] = [
   {
@@ -39,7 +50,10 @@ const LINKS: { icon: IonName; label: string; desc: string; screen: ScreenId }[] 
 ];
 
 export default function ProfileScreen({ onBack, onNav, onLogout }: Props) {
+  const colors = useColors();
   const { language } = useAppPrefs();
+  const badges = badgesFor(colors);
+  const earnedCount = badges.filter((b) => b.earned).length;
 
   const confirmLogout = () => {
     Alert.alert("Log out?", "You'll need to sign in again to use Aya.", [
@@ -49,7 +63,7 @@ export default function ProfileScreen({ onBack, onNav, onLogout }: Props) {
   };
 
   return (
-    <Screen background={colors.white} scroll safeBottom={false}>
+    <Screen scroll safeBottom={false}>
       <ScreenHeader title="Profile" onBack={onBack} />
 
       <View style={styles.body}>
@@ -67,6 +81,44 @@ export default function ProfileScreen({ onBack, onNav, onLogout }: Props) {
             </AppText>
           </View>
         </Card>
+
+        <Card style={styles.streakCard}>
+          <IconWell backgroundColor={colors.washPurple} size={56} radius={20}>
+            <Icon name="flame" size={26} color={colors.purple} />
+          </IconWell>
+          <View style={styles.flex}>
+            <AppText variant="labelLG">5-day practice streak</AppText>
+            <AppText variant="bodySM">
+              {earnedCount} of {badges.length} badges earned
+            </AppText>
+          </View>
+        </Card>
+
+        <AppText variant="headingSM" style={styles.section}>
+          Badges
+        </AppText>
+        <View style={styles.badgeList}>
+          {badges.map((badge) => (
+            <Card key={badge.label} style={[styles.badgeRow, !badge.earned && styles.badgeRowLocked]}>
+              <IconWell backgroundColor={badge.earned ? badge.color : colors.surfaceGhost} size={44} radius={14}>
+                <Icon
+                  name={badge.earned ? badge.icon : "lock-closed"}
+                  size={20}
+                  color={badge.earned ? colors.purple : colors.textSubtle}
+                />
+              </IconWell>
+              <View style={styles.flex}>
+                <AppText variant="labelMD" color={badge.earned ? colors.text : colors.textMuted}>
+                  {badge.label}
+                </AppText>
+                <AppText variant="caption">{badge.desc}</AppText>
+              </View>
+              {badge.earned ? (
+                <Icon name="checkmark-circle" size={22} color={colors.successDark} />
+              ) : null}
+            </Card>
+          ))}
+        </View>
 
         <View style={styles.links}>
           {LINKS.map((link) => (
@@ -128,6 +180,25 @@ const styles = StyleSheet.create({
   },
   langTag: {
     marginTop: 4,
+  },
+  streakCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.lg,
+  },
+  section: {
+    marginTop: spacing.sm,
+  },
+  badgeList: {
+    gap: spacing.sm,
+  },
+  badgeRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 14,
+  },
+  badgeRowLocked: {
+    opacity: 0.6,
   },
   links: {
     gap: spacing.sm,

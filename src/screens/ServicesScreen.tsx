@@ -1,9 +1,9 @@
-import { Alert, Pressable, StyleSheet, View } from "react-native";
+import { Alert, Pressable, View } from "react-native";
 import type { ComponentProps } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { AppText, Icon, IconWell, Screen, ScreenHeader } from "../components/ui";
 import type { FlowId } from "../content/flows";
-import { colors, radii, spacing } from "../theme";
+import { radii, spacing, useColors, usePaletteStyles, type Palette } from "../theme";
 
 type Props = { onBack: () => void; onStartFlow: (flow: FlowId) => void };
 type IonName = ComponentProps<typeof Ionicons>["name"];
@@ -24,8 +24,10 @@ const SERVICES: Service[] = [
 ];
 
 export default function ServicesScreen({ onBack, onStartFlow }: Props) {
+  const colors = useColors();
+  const styles = usePaletteStyles(createServiceStyles);
   return (
-    <Screen background={colors.white} scroll safeBottom={false}>
+    <Screen scroll safeBottom={false}>
       <ScreenHeader title="Services" onBack={onBack} />
       <AppText variant="bodySM" style={styles.subtitle}>
         Everything you can do with Aya, in one place.
@@ -60,26 +62,28 @@ export default function ServicesScreen({ onBack, onStartFlow }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  subtitle: {
-    paddingHorizontal: spacing.screenX,
-    marginTop: 2,
-  },
-  body: {
-    padding: spacing.xl,
-  },
-  grid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-  },
-  tile: {
-    width: "48%",
-    borderRadius: radii["2xl"],
-    paddingVertical: spacing.xl,
-    paddingHorizontal: spacing.lg,
-    backgroundColor: colors.surfaceCard,
-    gap: 6,
-    marginBottom: spacing.md,
-  },
-});
+function createServiceStyles(colors: Palette) {
+  return {
+    subtitle: {
+      paddingHorizontal: spacing.screenX,
+      marginTop: 2,
+    },
+    body: {
+      padding: spacing.xl,
+    },
+    grid: {
+      flexDirection: "row" as const,
+      flexWrap: "wrap" as const,
+      justifyContent: "space-between" as const,
+    },
+    tile: {
+      width: "48%" as const,
+      borderRadius: radii["2xl"],
+      paddingVertical: spacing.xl,
+      paddingHorizontal: spacing.lg,
+      backgroundColor: colors.surfaceCard,
+      gap: 6,
+      marginBottom: spacing.md,
+    },
+  };
+}

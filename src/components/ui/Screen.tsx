@@ -91,9 +91,11 @@ export function ScreenFooter({
 const styles = StyleSheet.create({
   root: {
     flex: 1,
+    minHeight: 0,
   },
   flex: {
     flex: 1,
+    minHeight: 0,
   },
   scrollContent: {
     flexGrow: 1,

@@ -1,19 +1,21 @@
-import { Image, Pressable, StyleSheet, View } from "react-native";
+import { Image, Pressable, View } from "react-native";
 import { AppText, Avatar, Button, Icon, Screen, ScreenFooter } from "../components/ui";
 import { brandImages } from "../content/brand";
 import { useAppPrefs } from "../context/AppPrefs";
-import { colors, radii, spacing } from "../theme";
+import { radii, spacing, useColors, usePaletteStyles, type Palette } from "../theme";
 
 type Props = { onHome: () => void; onTransferMore: () => void; onBack: () => void };
 
 export default function TransferReceiptScreen({ onHome, onTransferMore, onBack }: Props) {
+  const colors = useColors();
+  const styles = usePaletteStyles(createReceiptStyles);
   const { flow } = useAppPrefs();
   const name = flow.details.find((d) => d.label === "To")?.value ?? "Ricky Martin";
   const number = flow.details.find((d) => d.label === "Number")?.value ?? "Ac no. 8050530XXX";
   const amount = flow.successAmount ?? "$580.00";
 
   return (
-    <Screen background={colors.white}>
+    <Screen>
       <View style={styles.top}>
         <Pressable onPress={onBack} accessibilityLabel="Go back" hitSlop={8} style={styles.topBtn}>
           <Icon name="chevron-back" size={26} color={colors.text} />
@@ -29,7 +31,7 @@ export default function TransferReceiptScreen({ onHome, onTransferMore, onBack }
           resizeMode="contain"
           accessibilityLabel="Transfer success"
         />
-        <AppText variant="displayMD" align="center" color="#111111">
+        <AppText variant="displayMD" align="center" color={colors.text}>
           Transfer Success
         </AppText>
         <AppText variant="body" align="center" style={styles.sub}>
@@ -39,7 +41,7 @@ export default function TransferReceiptScreen({ onHome, onTransferMore, onBack }
         <AppText variant="caption" align="center" style={styles.totalLabel}>
           Total Transfer amount
         </AppText>
-        <AppText variant="displayLG" align="center" color="#111111" style={styles.total}>
+        <AppText variant="displayLG" align="center" color={colors.text} style={styles.total}>
           {amount.startsWith("$") ? amount : `$${amount}`}
         </AppText>
 
@@ -67,7 +69,8 @@ export default function TransferReceiptScreen({ onHome, onTransferMore, onBack }
   );
 }
 
-const styles = StyleSheet.create({
+function createReceiptStyles(colors: Palette) {
+  return {
   top: {
     flexDirection: "row",
     alignItems: "center",
@@ -123,6 +126,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   moreText: {
-    textDecorationLine: "underline",
+    textDecorationLine: "underline" as const,
   },
-});
+  };
+}

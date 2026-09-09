@@ -1,10 +1,10 @@
-import { Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { Pressable, ScrollView, View } from "react-native";
 import type { ComponentProps } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { AppText, Button, Icon, IconWell, Screen, ScreenFooter, Toggle } from "../components/ui";
 import { useAppPrefs } from "../context/AppPrefs";
 import type { AccessibilityPrefs } from "../context/AppPrefs";
-import { colors, radii, spacing } from "../theme";
+import { radii, spacing, useColors, usePaletteStyles, type Palette } from "../theme";
 
 type IonName = ComponentProps<typeof Ionicons>["name"];
 type PrefKey = keyof Pick<
@@ -29,10 +29,12 @@ const OPTIONS: {
 type Props = { onNext: () => void };
 
 export default function AccessibilitySetupScreen({ onNext }: Props) {
+  const colors = useColors();
+  const styles = usePaletteStyles(createSetupStyles);
   const { accessibility, setAccessibility } = useAppPrefs();
 
   return (
-    <Screen background={colors.white}>
+    <Screen>
       <ScrollView
         style={styles.flex}
         contentContainerStyle={styles.scroll}
@@ -59,7 +61,7 @@ export default function AccessibilitySetupScreen({ onNext }: Props) {
                 style={[styles.row, on && styles.rowOn]}
               >
                 <IconWell
-                  backgroundColor={on ? colors.white : colors.washPurple}
+                  backgroundColor={on ? colors.surface : colors.washPurple}
                   size={44}
                   radius={14}
                 >
@@ -87,7 +89,8 @@ export default function AccessibilitySetupScreen({ onNext }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
+function createSetupStyles(colors: Palette) {
+  return {
   flex: {
     flex: 1,
     minHeight: 0,
@@ -127,4 +130,5 @@ const styles = StyleSheet.create({
   desc: {
     marginTop: 2,
   },
-});
+  };
+}

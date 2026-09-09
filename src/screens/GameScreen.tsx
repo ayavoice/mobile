@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Pressable, View } from "react-native";
 import type { ComponentProps } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { AppText, Card, Icon, IconWell, Screen, ScreenHeader } from "../components/ui";
-import { colors, radii, spacing } from "../theme";
+import { radii, spacing, useColors, usePaletteStyles, type Palette } from "../theme";
 
 type Props = { onBack: () => void };
 type IonName = ComponentProps<typeof Ionicons>["name"];
@@ -16,13 +16,6 @@ type QuizQuestion = {
   options: { label: string; correct: boolean }[];
   explanation: string;
 };
-
-const BADGES: { icon: IonName; label: string; desc: string; color: string; earned: boolean }[] = [
-  { icon: "mic", label: "First voice command", desc: "Completed a spoken flow with Aya", color: colors.washYellow, earned: true },
-  { icon: "shield-checkmark", label: "PIN never spoken", desc: "Confirmed with biometrics, not your voice", color: colors.washGreen, earned: true },
-  { icon: "swap-horizontal", label: "Code-switch pro", desc: "Mixed Akan/Ewe/English in one sentence", color: colors.washPurple, earned: true },
-  { icon: "trending-up", label: "5 flows in a week", desc: "Used Aya for money 5 times this week", color: colors.washBlue, earned: false },
-];
 
 const PHRASE_BANK: { languageLabel: string; transcript: string; gloss: string }[] = [
   { languageLabel: "Twi", transcript: "Me pɛ sɛ me sendi GH₵150 ma Kwame", gloss: "I want to send GH₵150 to Kwame" },
@@ -106,40 +99,46 @@ function buildScamQuestions(): QuizQuestion[] {
   }));
 }
 
-const GAMES: {
+function gamesFor(colors: Palette): {
   id: GameId;
   icon: IonName;
   title: string;
   desc: string;
   color: string;
   build: () => QuizQuestion[];
-}[] = [
-  {
-    id: "phrase",
-    icon: "chatbubbles",
-    title: "Phrase Match",
-    desc: "Hear a Twi/Ewe money phrase, pick what it means",
-    color: colors.washPurple,
-    build: buildPhraseQuestions,
-  },
-  {
-    id: "scam",
-    icon: "shield-checkmark",
-    title: "Spot the Scam",
-    desc: "Safe or scam? Practice spotting PIN and OTP tricks",
-    color: colors.washGreen,
-    build: buildScamQuestions,
-  },
-];
+}[] {
+  return [
+    {
+      id: "phrase",
+      icon: "chatbubbles",
+      title: "Phrase Match",
+      desc: "Hear a Twi/Ewe money phrase, pick what it means",
+      color: colors.washPurple,
+      build: buildPhraseQuestions,
+    },
+    {
+      id: "scam",
+      icon: "shield-checkmark",
+      title: "Spot the Scam",
+      desc: "Safe or scam? Practice spotting PIN and OTP tricks",
+      color: colors.washGreen,
+      build: buildScamQuestions,
+    },
+  ];
+}
 
 function QuizPlayer({
   title,
   build,
   onExit,
+  colors,
+  styles,
 }: {
   title: string;
   build: () => QuizQuestion[];
   onExit: () => void;
+  colors: Palette;
+  styles: ReturnType<typeof createGameStyles>;
 }) {
   const [questions, setQuestions] = useState<QuizQuestion[]>(build);
   const [index, setIndex] = useState(0);
@@ -265,60 +264,31 @@ function QuizPlayer({
 }
 
 export default function GameScreen({ onBack }: Props) {
+  const colors = useColors();
+  const styles = usePaletteStyles(createGameStyles);
   const [activeGame, setActiveGame] = useState<GameId | null>(null);
-  const earnedCount = BADGES.filter((b) => b.earned).length;
+  const GAMES = gamesFor(colors);
   const active = GAMES.find((g) => g.id === activeGame) ?? null;
 
   return (
     <Screen background={colors.white} scroll safeBottom={false}>
       <ScreenHeader
-        title={active ? active.title : "Learn & Earn"}
+        title={active ? active.title : "Learn"}
         onBack={active ? () => setActiveGame(null) : onBack}
       />
 
       <View style={styles.body}>
         {active ? (
-          <QuizPlayer key={active.id} title={active.title} build={active.build} onExit={() => setActiveGame(null)} />
+          <QuizPlayer
+            key={active.id}
+            title={active.title}
+            build={active.build}
+            onExit={() => setActiveGame(null)}
+            colors={colors}
+            styles={styles}
+          />
         ) : (
           <>
-            <Card style={styles.streakCard}>
-              <IconWell backgroundColor={colors.washPurple} size={56} radius={20}>
-                <Icon name="flame" size={26} color={colors.purple} />
-              </IconWell>
-              <View style={styles.flex}>
-                <AppText variant="labelLG">5-day practice streak</AppText>
-                <AppText variant="bodySM">
-                  {earnedCount} of {BADGES.length} badges earned
-                </AppText>
-              </View>
-            </Card>
-
-            <AppText variant="headingSM" style={styles.section}>
-              Badges
-            </AppText>
-            <View style={styles.badgeList}>
-              {BADGES.map((badge) => (
-                <Card key={badge.label} style={[styles.badgeRow, !badge.earned && styles.badgeRowLocked]}>
-                  <IconWell backgroundColor={badge.earned ? badge.color : colors.surfaceGhost} size={44} radius={14}>
-                    <Icon
-                      name={badge.earned ? badge.icon : "lock-closed"}
-                      size={20}
-                      color={badge.earned ? colors.purple : colors.textSubtle}
-                    />
-                  </IconWell>
-                  <View style={styles.flex}>
-                    <AppText variant="labelMD" color={badge.earned ? colors.text : colors.textMuted}>
-                      {badge.label}
-                    </AppText>
-                    <AppText variant="caption">{badge.desc}</AppText>
-                  </View>
-                  {badge.earned ? (
-                    <Icon name="checkmark-circle" size={22} color={colors.successDark} />
-                  ) : null}
-                </Card>
-              ))}
-            </View>
-
             <AppText variant="headingSM" style={styles.section}>
               Mini games
             </AppText>
@@ -355,7 +325,8 @@ export default function GameScreen({ onBack }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
+function createGameStyles(colors: Palette) {
+  return {
   body: {
     padding: spacing.xl,
     gap: spacing.md,
@@ -364,28 +335,12 @@ const styles = StyleSheet.create({
     flex: 1,
     minWidth: 0,
   },
-  streakCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: spacing.lg,
-  },
   section: {
-    marginTop: spacing.sm,
+    marginTop: 0,
   },
   sectionHint: {
     marginTop: -spacing.sm,
     marginBottom: spacing.xs,
-  },
-  badgeList: {
-    gap: spacing.sm,
-  },
-  badgeRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 14,
-  },
-  badgeRowLocked: {
-    opacity: 0.6,
   },
   gameRow: {
     flexDirection: "row",
@@ -454,4 +409,5 @@ const styles = StyleSheet.create({
   resultTitle: {
     marginTop: spacing.xs,
   },
-});
+  };
+}

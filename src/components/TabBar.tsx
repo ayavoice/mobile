@@ -2,10 +2,10 @@ import { Pressable, StyleSheet, View } from "react-native";
 import type { ComponentProps } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { AppText, Icon } from "./ui";
+import { AppText, Icon, WaveIcon } from "./ui";
 import type { FlowId } from "../content/flows";
 import type { ScreenId } from "../navigation/types";
-import { useColors } from "../theme";
+import { fonts, useColors } from "../theme";
 
 type IonName = ComponentProps<typeof Ionicons>["name"];
 
@@ -51,9 +51,14 @@ export default function TabBar({ current, onNav, onStartFlow }: Props) {
               style={styles.tab}
             >
               <View style={[styles.speechIcon, { backgroundColor: colors.purple }]}>
-                <Icon name="mic" size={22} color={colors.white} />
+                <WaveIcon size={28} color={colors.white} />
               </View>
-              <AppText variant="tab" numberOfLines={1} style={styles.tabLabel} color={colors.purple}>
+              <AppText
+                variant="tab"
+                numberOfLines={1}
+                style={[styles.tabLabel, styles.speechLabel]}
+                color={colors.purple}
+              >
                 {tab.label}
               </AppText>
             </Pressable>
@@ -116,14 +121,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   speechIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: -10,
+    marginTop: -14,
   },
   tabLabel: {
     fontSize: 11,
+  },
+  speechLabel: {
+    fontFamily: fonts.body.bold,
   },
 });

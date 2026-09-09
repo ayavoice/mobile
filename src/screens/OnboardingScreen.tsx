@@ -1,36 +1,24 @@
 import { useState } from "react";
 import { Pressable, View } from "react-native";
-import { AppText, BrandLogo, Button, Icon, IconWell, Screen, ScreenFooter } from "../components/ui";
-import { spacing, useColors, usePaletteStyles, type Palette } from "../theme";
-import type { ComponentProps } from "react";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { AppText, Button, Screen, ScreenFooter } from "../components/ui";
+import { spacing, usePaletteStyles, type Palette } from "../theme";
 
-type IonName = ComponentProps<typeof Ionicons>["name"];
-
-function slidesFor(colors: Palette): {
-  icon: IonName;
+function slidesFor(): {
   title: string;
   body: string;
-  color: string;
 }[] {
   return [
     {
-      icon: "mic",
       title: "Speak naturally",
       body: "Talk to Aya just like you would talk to a friend. No reading or typing needed.",
-      color: colors.washPurple,
     },
     {
-      icon: "globe-outline",
       title: "Use your language",
       body: "Akan/Twi, Ewe, or English — Aya understands you in the language you are most comfortable with.",
-      color: colors.washBlue,
     },
     {
-      icon: "lock-closed",
       title: "Authenticate privately",
       body: "Use your fingerprint or face to confirm. You never speak your PIN to Aya.",
-      color: colors.washGreen,
     },
   ];
 }
@@ -38,19 +26,22 @@ function slidesFor(colors: Palette): {
 type Props = { onNext: () => void };
 
 export default function OnboardingScreen({ onNext }: Props) {
-  const colors = useColors();
   const styles = usePaletteStyles(createOnboardingStyles);
   const [slide, setSlide] = useState(0);
-  const SLIDES = slidesFor(colors);
+  const SLIDES = slidesFor();
   const s = SLIDES[slide];
 
   return (
     <Screen scroll>
-      <BrandLogo height={36} style={{ marginTop: 8 }} />
+      <View style={styles.header}>
+        {slide < 2 && (
+          <Button onPress={onNext} variant="ghost" style={styles.skipButton}>
+            <AppText variant="caption">Skip</AppText>
+          </Button>
+        )}
+      </View>
+
       <View style={styles.body}>
-        <IconWell backgroundColor={s.color} size={132} radius={44}>
-          <Icon name={s.icon} size={52} color={colors.purple} />
-        </IconWell>
         <View style={styles.copy}>
           <AppText variant="displayMD" align="center">
             {s.title}
@@ -75,12 +66,9 @@ export default function OnboardingScreen({ onNext }: Props) {
 
       <ScreenFooter>
         {slide < 2 ? (
-          <>
-            <Button onPress={() => setSlide(slide + 1)}>Next</Button>
-            <Button onPress={onNext} variant="ghost">
-              Skip
-            </Button>
-          </>
+          <Button onPress={() => setSlide(slide + 1)} style={styles.nextButton}>
+            Next
+          </Button>
         ) : (
           <Button onPress={onNext}>Get started</Button>
         )}
@@ -91,6 +79,20 @@ export default function OnboardingScreen({ onNext }: Props) {
 
 function createOnboardingStyles(colors: Palette) {
   return {
+    header: {
+      flexDirection: "row" as const,
+      justifyContent: "flex-end" as const,
+      paddingHorizontal: spacing.md,
+      paddingTop: spacing.sm,
+      paddingBottom: spacing.md,
+    },
+    skipButton: {
+      alignSelf: "flex-end" as const,
+      minHeight: 0,
+      backgroundColor: "transparent",
+      paddingHorizontal: spacing.xs,
+      paddingVertical: 4,
+    },
     body: {
       flex: 1,
       alignItems: "center" as const,
@@ -122,6 +124,9 @@ function createOnboardingStyles(colors: Palette) {
     dotIdle: {
       width: 8,
       backgroundColor: colors.trackIdle,
+    },
+    nextButton: {
+      borderRadius: 9999,
     },
   };
 }

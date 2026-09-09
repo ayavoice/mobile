@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Pressable, View } from "react-native";
 import { AppText, Button, Icon, IconWell, Screen, ScreenFooter } from "../components/ui";
 import { useAppPrefs } from "../context/AppPrefs";
 import type { AppLanguage } from "../content/flows";
-import { colors, radii, spacing } from "../theme";
+import { radii, spacing, useColors, usePaletteStyles, type Palette } from "../theme";
 
 const LANGUAGES: {
   code: AppLanguage;
@@ -19,11 +19,13 @@ const LANGUAGES: {
 type Props = { onNext: () => void };
 
 export default function LanguageScreen({ onNext }: Props) {
+  const colors = useColors();
+  const styles = usePaletteStyles(createStyles);
   const { language, setLanguage } = useAppPrefs();
   const [selected, setSelected] = useState<AppLanguage>(language);
 
   return (
-    <Screen background={colors.white} scroll>
+    <Screen scroll>
       <View style={styles.header}>
         <AppText variant="titleLG">Choose your language</AppText>
         <AppText variant="bodyMD" style={styles.sub}>
@@ -43,7 +45,11 @@ export default function LanguageScreen({ onNext }: Props) {
               accessibilityLabel={`Select ${lang.name}`}
               style={[styles.row, active && styles.rowActive]}
             >
-              <IconWell backgroundColor={active ? colors.white : colors.washPurple} size={52} radius={18}>
+              <IconWell
+                backgroundColor={active ? colors.surface : colors.washPurple}
+                size={52}
+                radius={18}
+              >
                 <AppText variant="labelMD" color={colors.purple}>
                   {lang.badge}
                 </AppText>
@@ -80,54 +86,56 @@ export default function LanguageScreen({ onNext }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  header: {
-    paddingTop: spacing.xl,
-    paddingHorizontal: spacing.screenX,
-    flexShrink: 0,
-  },
-  sub: {
-    marginTop: spacing.sm,
-  },
-  list: {
-    flex: 1,
-    paddingHorizontal: spacing.screenX,
-    paddingVertical: spacing["2xl"],
-  },
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-    minHeight: 84,
-    marginBottom: 12,
-    borderRadius: radii["2xl"],
-    paddingVertical: spacing.lg,
-    paddingHorizontal: spacing.xl,
-    backgroundColor: colors.surfaceCard,
-  },
-  rowActive: {
-    backgroundColor: colors.washPurple,
-  },
-  meta: {
-    flex: 1,
-    marginLeft: spacing.lg,
-    marginRight: spacing.md,
-    minWidth: 0,
-  },
-  sample: {
-    marginTop: 2,
-  },
-  check: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    alignItems: "center",
-    justifyContent: "center",
-    flexShrink: 0,
-  },
-  checkOn: {
-    backgroundColor: colors.purple,
-  },
-  checkOff: {
-    backgroundColor: colors.white,
-  },
-});
+function createStyles(colors: Palette) {
+  return {
+    header: {
+      paddingTop: spacing.xl,
+      paddingHorizontal: spacing.screenX,
+      flexShrink: 0,
+    },
+    sub: {
+      marginTop: spacing.sm,
+    },
+    list: {
+      flex: 1,
+      paddingHorizontal: spacing.screenX,
+      paddingVertical: spacing["2xl"],
+    },
+    row: {
+      flexDirection: "row" as const,
+      alignItems: "center" as const,
+      minHeight: 84,
+      marginBottom: 12,
+      borderRadius: radii["2xl"],
+      paddingVertical: spacing.lg,
+      paddingHorizontal: spacing.xl,
+      backgroundColor: colors.surfaceCard,
+    },
+    rowActive: {
+      backgroundColor: colors.washPurple,
+    },
+    meta: {
+      flex: 1,
+      marginLeft: spacing.lg,
+      marginRight: spacing.md,
+      minWidth: 0,
+    },
+    sample: {
+      marginTop: 2,
+    },
+    check: {
+      width: 28,
+      height: 28,
+      borderRadius: 14,
+      alignItems: "center" as const,
+      justifyContent: "center" as const,
+      flexShrink: 0,
+    },
+    checkOn: {
+      backgroundColor: colors.purple,
+    },
+    checkOff: {
+      backgroundColor: colors.surface,
+    },
+  };
+}

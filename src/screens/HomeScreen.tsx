@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Image,
@@ -7,6 +7,15 @@ import {
   StyleSheet,
   View,
 } from "react-native";
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withRepeat,
+  withSequence,
+  withTiming,
+} from "react-native-reanimated";
 import { AppText, Avatar, Icon, MciIcon, Screen } from "../components/ui";
 import { ACCENT, brandImages } from "../content/brand";
 import type { FlowId } from "../content/flows";
@@ -33,6 +42,61 @@ const QUICK_SEND = [
   { name: "Sourabh", image: brandImages.sourabh },
   { name: "Aisha", image: brandImages.aisha },
 ];
+
+const MIC_WAVE_BARS = [
+  { h: 16, delay: 0 },
+  { h: 32, delay: 90 },
+  { h: 48, delay: 40 },
+  { h: 28, delay: 130 },
+  { h: 16, delay: 60 },
+];
+
+function MicWaveBar({ height, delay }: { height: number; delay: number }) {
+  const scale = useSharedValue(0.45);
+
+  useEffect(() => {
+    scale.value = withDelay(
+      delay,
+      withRepeat(
+        withSequence(
+          withTiming(1, { duration: 340, easing: Easing.inOut(Easing.sin) }),
+          withTiming(0.45, { duration: 340, easing: Easing.inOut(Easing.sin) }),
+        ),
+        -1,
+        true,
+      ),
+    );
+  }, [delay, scale]);
+
+  const style = useAnimatedStyle(() => ({ transform: [{ scaleY: scale.value }] }));
+
+  return <Animated.View style={[micWaveStyles.bar, { height }, style]} />;
+}
+
+function MicWave() {
+  return (
+    <View style={micWaveStyles.row}>
+      {MIC_WAVE_BARS.map((bar, i) => (
+        <MicWaveBar key={i} height={bar.h} delay={bar.delay} />
+      ))}
+    </View>
+  );
+}
+
+const micWaveStyles = StyleSheet.create({
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 5,
+    height: 50,
+  },
+  bar: {
+    width: 6,
+    borderRadius: 3,
+    backgroundColor: ACCENT,
+  },
+});
 
 export default function HomeScreen({ onNav, onStartFlow }: Props) {
   const colors = useColors();
@@ -106,13 +170,15 @@ export default function HomeScreen({ onNav, onStartFlow }: Props) {
             resizeMode="contain"
             accessibilityIgnoresInvertColors
           />
-          <Pressable
-            onPress={() => onStartFlow("transfer")}
-            accessibilityLabel="Talk to send money"
-            style={({ pressed }) => [styles.micButton, pressed && styles.micPressed]}
-          >
-            <Icon name="mic" size={34} color={ACCENT} />
-          </Pressable>
+          <View style={styles.micWrap}>
+            <Pressable
+              onPress={() => onStartFlow("transfer")}
+              accessibilityLabel="Talk to send money"
+              style={({ pressed }) => [styles.micButton, pressed && styles.micPressed]}
+            >
+              <MicWave />
+            </Pressable>
+          </View>
         </View>
 
         <AppText variant="headingSM" style={styles.sectionTitle}>
@@ -251,7 +317,7 @@ function createHomeStyles(colors: Palette) {
     fontWeight: "800",
   },
   stage: {
-    height: 210,
+    height: 240,
     alignItems: "center",
     justifyContent: "center",
     marginTop: 4,
@@ -259,17 +325,24 @@ function createHomeStyles(colors: Palette) {
   },
   cardStack: {
     position: "absolute",
-    width: 300,
-    height: 210,
+    width: 345,
+    height: 240,
+  },
+  micWrap: {
+    width: MIC,
+    height: MIC,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: -130,
+    zIndex: 2,
   },
   micButton: {
     width: MIC,
     height: MIC,
     borderRadius: MIC / 2,
-    backgroundColor: colors.white,
+    backgroundColor: "rgba(228,228,235,0.92)",
     alignItems: "center",
     justifyContent: "center",
-    zIndex: 2,
     shadowColor: "#4A2DBA",
     shadowOffset: { width: 0, height: 12 },
     shadowOpacity: 0.22,

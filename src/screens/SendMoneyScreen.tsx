@@ -3,7 +3,7 @@ import { Alert, Pressable, StyleSheet, View } from "react-native";
 import { AppText, Avatar, Button, Icon, Screen, ScreenFooter } from "../components/ui";
 import { ACCENT, brandImages } from "../content/brand";
 import { useAppPrefs } from "../context/AppPrefs";
-import { colors, spacing } from "../theme";
+import { spacing, useColors } from "../theme";
 
 type Props = { onSend: () => void; onBack: () => void };
 
@@ -16,6 +16,7 @@ function recipientFrom(details: { label: string; value: string }[]) {
 }
 
 export default function SendMoneyScreen({ onSend, onBack }: Props) {
+  const colors = useColors();
   const { flow } = useAppPrefs();
   const recipient = useMemo(() => recipientFrom(flow.details), [flow.details]);
   const initialAmount = useMemo(
@@ -39,7 +40,7 @@ export default function SendMoneyScreen({ onSend, onBack }: Props) {
   const canSend = Number(amount) > 0;
 
   return (
-    <Screen background={colors.white} style={styles.root}>
+    <Screen style={styles.root}>
       <View style={styles.top}>
         <Pressable onPress={onBack} accessibilityLabel="Go back" hitSlop={8} style={styles.topBtn}>
           <Icon name="chevron-back" size={26} color={colors.text} />
@@ -73,7 +74,7 @@ export default function SendMoneyScreen({ onSend, onBack }: Props) {
 
         <AppText
           variant="displayLG"
-          color="#111111"
+          color={colors.text}
           align="center"
           numberOfLines={1}
           adjustsFontSizeToFit
@@ -93,7 +94,7 @@ export default function SendMoneyScreen({ onSend, onBack }: Props) {
               {key === "⌫" ? (
                 <Icon name="backspace-outline" size={24} color={colors.text} />
               ) : (
-                <AppText variant="titleSM" color="#222222">
+                <AppText variant="titleSM" color={colors.text}>
                   {key}
                 </AppText>
               )}

@@ -44,8 +44,5 @@ const styles = StyleSheet.create({
     width: 390,
     height: "100%" as unknown as number,
     overflow: "hidden",
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-    borderColor: "#C4C4C4",
   },
 });

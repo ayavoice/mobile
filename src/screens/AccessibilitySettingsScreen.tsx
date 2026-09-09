@@ -4,7 +4,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { AppText, Card, Icon, IconWell, Screen, ScreenHeader, Toggle } from "../components/ui";
 import { useAppPrefs } from "../context/AppPrefs";
 import type { AccessibilityPrefs } from "../context/AppPrefs";
-import { colors, radii, spacing } from "../theme";
+import { colors, radii, spacing, useColors, usePaletteStyles, type Palette } from "../theme";
 
 type Props = { onBack: () => void };
 type ToggleKey = keyof Pick<
@@ -23,13 +23,18 @@ const TOGGLE_OPTS: { key: ToggleKey; icon: IonName; label: string; desc: string 
 ];
 
 export default function AccessibilitySettingsScreen({ onBack }: Props) {
+  const colors = useColors();
+  const styles = usePaletteStyles(createA11yStyles);
   const { accessibility, setAccessibility, language, setLanguage } = useAppPrefs();
 
   return (
-    <Screen background={colors.white} scroll>
+    <Screen scroll>
       <ScreenHeader title="Accessibility" onBack={onBack} />
 
       <View style={styles.body}>
+        <AppText variant="caption" style={styles.cardTitle}>
+          Light and dark appearance follow your phone settings. Logos switch with the mode.
+        </AppText>
         <Card>
           <AppText variant="labelMD" style={styles.cardTitle}>
             Language
@@ -142,7 +147,8 @@ export default function AccessibilitySettingsScreen({ onBack }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
+function createA11yStyles(colors: Palette) {
+  return {
   body: {
     padding: spacing.xl,
     gap: spacing.md,
@@ -176,4 +182,5 @@ const styles = StyleSheet.create({
     flex: 1,
     minWidth: 0,
   },
-});
+  };
+}
