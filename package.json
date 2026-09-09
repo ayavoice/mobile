@@ -41,7 +41,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "build:web": "expo export -p web && node scripts/fix-web-export.js"
+    "build:web": "expo export -p web && node scripts/fix-web-export.js",
+    "vercel-build": "npm run build:web"
   },
   "private": true
 }
