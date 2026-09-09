@@ -3,6 +3,8 @@ import { Pressable, View } from "react-native";
 import { AppText, BrandLogo, Button, Screen, ScreenFooter, ScreenHeader, TextField } from "../components/ui";
 import { fonts, spacing, useColors, usePaletteStyles, type Palette } from "../theme";
 
+const PHONE_LENGTH = 9;
+
 type Props = { onNext: (phone: string) => void; onBack: () => void; onLogin: () => void };
 
 export default function SignupScreen({ onNext, onBack, onLogin }: Props) {
@@ -10,9 +12,18 @@ export default function SignupScreen({ onNext, onBack, onLogin }: Props) {
   const styles = usePaletteStyles(createStyles);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [phoneTouched, setPhoneTouched] = useState(false);
+  const [nameTouched, setNameTouched] = useState(false);
 
-  const phoneValid = phone.replace(/\D/g, "").length >= 9;
-  const canContinue = name.trim().length > 1 && phoneValid;
+  const phoneValid = phone.length === PHONE_LENGTH;
+  const nameValid = name.trim().length > 1;
+  const canContinue = nameValid && phoneValid;
+
+  const nameError = nameTouched && !nameValid ? "Enter your full name." : undefined;
+  const phoneError =
+    phoneTouched && !phoneValid
+      ? `Enter all ${PHONE_LENGTH} digits of your phone number.`
+      : undefined;
 
   return (
     <Screen scroll>
@@ -20,7 +31,7 @@ export default function SignupScreen({ onNext, onBack, onLogin }: Props) {
 
       <View style={styles.intro}>
         <BrandLogo height={40} />
-        <AppText variant="titleLG" align="center" style={styles.introTitle}>
+        <AppText variant="titleLG" align="center" heading={1} style={styles.introTitle}>
           Create your account
         </AppText>
         <AppText variant="bodyMD" align="center" color={colors.textSecondary}>
@@ -33,19 +44,23 @@ export default function SignupScreen({ onNext, onBack, onLogin }: Props) {
           label="Full name"
           value={name}
           onChangeText={setName}
+          onBlur={() => setNameTouched(true)}
           placeholder="e.g. Kwame Mensah"
           autoCapitalize="words"
+          error={nameError}
         />
 
         <TextField
           label="Phone number"
           value={phone}
-          onChangeText={(t) => setPhone(t.replace(/[^\d]/g, ""))}
+          onChangeText={(t) => setPhone(t.replace(/[^\d]/g, "").slice(0, PHONE_LENGTH))}
+          onBlur={() => setPhoneTouched(true)}
           placeholder="24 123 4567"
           prefix="+233"
           keyboardType="phone-pad"
-          maxLength={10}
-          helper="We'll text a 6-digit code to confirm it's you."
+          maxLength={PHONE_LENGTH}
+          helper="We'll text a 4-digit code to confirm it's you."
+          error={phoneError}
         />
       </View>
 
@@ -55,6 +70,8 @@ export default function SignupScreen({ onNext, onBack, onLogin }: Props) {
         </Button>
         <Pressable
           onPress={onLogin}
+          accessibilityRole="button"
+          role="button"
           accessibilityLabel="I already have an account"
           hitSlop={8}
           style={styles.footerLink}

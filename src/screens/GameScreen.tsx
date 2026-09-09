@@ -244,6 +244,7 @@ function QuizPlayer({
               setSelected(null);
             }}
             accessibilityRole="button"
+            role="button"
           >
             <Icon name="refresh" size={18} color={colors.white} />
             <AppText variant="labelMD" color={colors.white}>
@@ -251,7 +252,7 @@ function QuizPlayer({
             </AppText>
           </Pressable>
         </View>
-        <Pressable style={styles.secondaryBtn} onPress={onExit} accessibilityRole="button">
+        <Pressable style={styles.secondaryBtn} onPress={onExit} accessibilityRole="button" role="button">
           <AppText variant="labelMD">Back to games</AppText>
         </Pressable>
       </Card>
@@ -271,7 +272,7 @@ function QuizPlayer({
             ]}
           />
         </View>
-        <Pressable onPress={onExit} accessibilityRole="button" accessibilityLabel="Exit game" hitSlop={8}>
+        <Pressable onPress={onExit} accessibilityRole="button" role="button" accessibilityLabel="Exit game" hitSlop={8}>
           <Icon name="close" size={20} color={colors.textSubtle} />
         </Pressable>
       </View>
@@ -312,6 +313,7 @@ function QuizPlayer({
                 if (opt.correct) setScore((s) => s + 1);
               }}
               accessibilityRole="button"
+              role="button"
               accessibilityState={{ selected: isSelected }}
               style={[
                 styles.option,
@@ -359,6 +361,7 @@ function QuizPlayer({
                 setIndex((i) => i + 1);
               }}
               accessibilityRole="button"
+              role="button"
             >
               <AppText variant="labelMD" color={colors.white}>
                 {index + 1 === questions.length ? "See results" : "Next"}
@@ -439,6 +442,7 @@ export default function GameScreen({ onBack }: Props) {
                   key={game.id}
                   onPress={() => setActiveGame(game.id)}
                   accessibilityRole="button"
+                  role="button"
                   accessibilityLabel={`Play ${game.title}. ${
                     played ? `Best score ${gp.best} of ${gp.total}.` : "Not played yet."
                   }`}

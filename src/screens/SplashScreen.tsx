@@ -27,6 +27,7 @@ export default function SplashScreen({ onNext }: Props) {
       ]}
       onPress={onNext}
       accessibilityRole="button"
+      role="button"
       accessibilityLabel="Continue to Aya"
     >
       <BrandLogo height={92} />

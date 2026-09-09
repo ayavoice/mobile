@@ -73,6 +73,7 @@ export default function Screen({
     <SafeAreaView
       style={[styles.root, { backgroundColor: resolvedBg }, style]}
       edges={[...edges]}
+      role="main"
     >
       <KeyboardAvoidingView
         style={styles.flex}

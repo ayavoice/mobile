@@ -64,6 +64,7 @@ export default function BiometricScreen({ onSuccess, onBack }: Props) {
                 key={m.id}
                 onPress={() => setMethod(m.id)}
                 accessibilityRole="button"
+                role="button"
                 accessibilityState={{ selected: on }}
                 accessibilityLabel={m.label}
                 style={[styles.method, on ? styles.methodOn : styles.methodOff]}

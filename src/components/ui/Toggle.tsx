@@ -24,7 +24,9 @@ export default function Toggle({
     <Pressable
       onPress={() => onValueChange(!value)}
       accessibilityRole="switch"
+      role="switch"
       accessibilityState={{ checked: value }}
+      aria-checked={value}
       accessibilityLabel={accessibilityLabel}
       style={[styles.track, { backgroundColor: value ? on : off }]}
     >

@@ -56,6 +56,7 @@ export default function AccessibilitySetupScreen({ onNext }: Props) {
                 key={opt.id}
                 onPress={() => setAccessibility({ [opt.id]: !on })}
                 accessibilityRole="button"
+                role="button"
                 accessibilityState={{ selected: on }}
                 accessibilityLabel={`${opt.label}: ${on ? "on" : "off"}`}
                 style={[styles.row, on && styles.rowOn]}

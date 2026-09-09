@@ -17,7 +17,7 @@ export default function ForgotPinScreen({ onNext, onBack }: Props) {
 
       <View style={styles.body}>
         <AppText variant="bodyMD">
-          Enter the phone number on your account. We'll text a 6-digit code so you can set a new
+          Enter the phone number on your account. We'll text a 4-digit code so you can set a new
           PIN.
         </AppText>
 

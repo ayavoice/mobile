@@ -54,6 +54,7 @@ export default function AccessibilitySettingsScreen({ onBack }: Props) {
                   onPress={() => setLanguage(lang.code)}
                   style={[styles.choice, on ? styles.choiceOn : styles.choiceOff]}
                   accessibilityRole="button"
+                  role="button"
                   accessibilityState={{ selected: on }}
                   accessibilityLabel={lang.label}
                 >
@@ -119,6 +120,7 @@ export default function AccessibilitySettingsScreen({ onBack }: Props) {
               setAccessibility({ [opt.key]: !accessibility[opt.key] })
             }
             accessibilityRole="button"
+            role="button"
             accessibilityState={{ selected: accessibility[opt.key] }}
             accessibilityLabel={`${opt.label}: ${accessibility[opt.key] ? "on" : "off"}`}
           >

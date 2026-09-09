@@ -42,7 +42,7 @@ export default function HelpScreen({ onBack }: Props) {
           <AppText variant="bodySM" align="center" color={colors.textInverseMuted} style={styles.callSub}>
             Free call, 24/7, in Twi, Ewe, or English
           </AppText>
-          <Pressable style={styles.callBtn} accessibilityRole="button">
+          <Pressable style={styles.callBtn} accessibilityRole="button" role="button">
             <Icon name="call-outline" size={18} color={colors.purple} />
             <AppText variant="labelMD" color={colors.purple}>
               Call 0800-AYA-HELP
@@ -67,6 +67,7 @@ export default function HelpScreen({ onBack }: Props) {
           onPress={() => setErrorDemo((v) => !v)}
           style={styles.toggleErrors}
           accessibilityRole="button"
+          role="button"
         >
           <AppText variant="labelSM">
             {errorDemo ? "Hide" : "Show"} error states

@@ -75,6 +75,7 @@ export default function BalanceScreen({ onBack }: Props) {
             onPress={() => setRevealed((v) => !v)}
             style={styles.reveal}
             accessibilityRole="button"
+            role="button"
             accessibilityLabel={revealed ? "Hide balance" : "Reveal balance"}
             accessibilityState={{ selected: revealed }}
           >

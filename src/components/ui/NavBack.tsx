@@ -12,6 +12,7 @@ export default function NavBack({ onBack }: NavBackProps) {
     <Pressable
       onPress={onBack}
       accessibilityRole="button"
+      role="button"
       accessibilityLabel="Go back"
       hitSlop={8}
       style={({ pressed }) => [styles.row, pressed && styles.pressed]}

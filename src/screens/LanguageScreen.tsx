@@ -41,6 +41,7 @@ export default function LanguageScreen({ onNext }: Props) {
               key={lang.code}
               onPress={() => setSelected(lang.code)}
               accessibilityRole="button"
+              role="button"
               accessibilityState={{ selected: active }}
               accessibilityLabel={`Select ${lang.name}`}
               style={[styles.row, active && styles.rowActive]}

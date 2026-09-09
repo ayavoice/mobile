@@ -13,7 +13,7 @@ export default function AuthWelcomeScreen({ onSignup, onLogin }: Props) {
       <View style={styles.body}>
         <BrandLogo height={72} />
         <View style={styles.copy}>
-          <AppText variant="titleLG" align="center">
+          <AppText variant="titleLG" align="center" heading={1}>
             Let's get you set up
           </AppText>
           <AppText variant="bodyLG" align="center" style={styles.sub} color={colors.textSecondary}>

@@ -57,6 +57,7 @@ export default function ListeningScreen({ onNext, onBack }: Props) {
         <Pressable
           onPress={onBack}
           accessibilityRole="button"
+          role="button"
           accessibilityLabel="Go back"
           hitSlop={8}
           style={styles.headerBtn}
@@ -67,6 +68,7 @@ export default function ListeningScreen({ onNext, onBack }: Props) {
           <Pressable
             onPress={() => setMuted((m) => !m)}
             accessibilityRole="button"
+            role="button"
             accessibilityLabel={muted ? "Unmute microphone" : "Mute microphone"}
             hitSlop={8}
             style={styles.headerBtn}
@@ -76,6 +78,7 @@ export default function ListeningScreen({ onNext, onBack }: Props) {
           <Pressable
             onPress={onBack}
             accessibilityRole="button"
+            role="button"
             accessibilityLabel="Close listening"
             hitSlop={8}
             style={styles.headerBtn}

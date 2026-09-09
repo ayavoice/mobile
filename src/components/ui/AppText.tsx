@@ -7,6 +7,13 @@ type AppTextProps = TextProps & {
   variant?: TypographyVariant;
   color?: string;
   align?: "left" | "center" | "right";
+  /**
+   * Marks this text as a page/section heading. On web this renders a real
+   * `<h1>`-`<h6>` (via `role="heading"` + `aria-level`) so screen-reader users
+   * can jump between headings; on native it sets the "header" accessibility
+   * trait. Use exactly one `heading={1}` per screen.
+   */
+  heading?: 1 | 2 | 3 | 4 | 5 | 6;
 };
 
 function colorForVariant(variant: TypographyVariant, colors: Palette) {
@@ -33,6 +40,7 @@ export default function AppText({
   variant = "body",
   color,
   align,
+  heading,
   style,
   children,
   ...rest
@@ -70,6 +78,14 @@ export default function AppText({
       ? colors.text
       : colorForVariant(variant, colors));
 
+  const headingProps = heading
+    ? {
+        accessibilityRole: "header" as const,
+        role: "heading" as const,
+        "aria-level": heading,
+      }
+    : null;
+
   return (
     <Text
       style={[
@@ -80,6 +96,7 @@ export default function AppText({
         align ? { textAlign: align } : null,
         style,
       ]}
+      {...headingProps}
       {...rest}
     >
       {children}

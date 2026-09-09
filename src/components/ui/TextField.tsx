@@ -20,6 +20,7 @@ type TextFieldProps = {
   maxLength?: number;
   helper?: string;
   error?: string;
+  onBlur?: () => void;
   accessibilityLabel?: string;
 };
 
@@ -35,6 +36,7 @@ export default function TextField({
   maxLength,
   helper,
   error,
+  onBlur,
   accessibilityLabel,
 }: TextFieldProps) {
   const colors = useColors();
@@ -68,13 +70,22 @@ export default function TextField({
           autoFocus={autoFocus}
           maxLength={maxLength}
           onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
+          onBlur={() => {
+            setFocused(false);
+            onBlur?.();
+          }}
           style={styles.input}
           accessibilityLabel={accessibilityLabel ?? label}
+          accessibilityHint={error}
         />
       </View>
       {error ? (
-        <AppText variant="caption" color={colors.danger} style={styles.helper}>
+        <AppText
+          variant="caption"
+          color={colors.danger}
+          style={styles.helper}
+          accessibilityLiveRegion="polite"
+        >
           {error}
         </AppText>
       ) : helper ? (

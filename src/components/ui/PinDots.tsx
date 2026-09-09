@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { View, useWindowDimensions } from "react-native";
 import { spacing, useColors, usePaletteStyles, type Palette } from "../../theme";
 
 type PinDotsProps = {
@@ -7,19 +7,36 @@ type PinDotsProps = {
   error?: boolean;
 };
 
+const MAX_CELL_WIDTH = 56;
+const ABSOLUTE_MIN_CELL_WIDTH = 24;
+
 export default function PinDots({ length, filled, error = false }: PinDotsProps) {
   const colors = useColors();
+  const { width: screenWidth } = useWindowDimensions();
   const styles = usePaletteStyles(createStyles);
 
+  // Fewer, bigger boxes (4-digit PIN) can afford a roomier gap than a longer
+  // OTP row — shrink the gap first so the boxes themselves stay as large as
+  // possible while still guaranteeing the whole row fits on screen.
+  const gap = length > 4 ? spacing.sm : spacing.md;
+  const available = screenWidth - spacing.screenX * 2 - gap * (length - 1);
+  const cellWidth = Math.min(
+    MAX_CELL_WIDTH,
+    Math.max(ABSOLUTE_MIN_CELL_WIDTH, Math.floor(available / length))
+  );
+  const cellHeight = Math.round(cellWidth * 1.15);
+  const cellRadius = Math.round(cellWidth * 0.25);
+
   return (
-    <View style={styles.row} accessibilityElementsHidden>
+    <View style={[styles.row, { gap }]} accessibilityElementsHidden>
       {Array.from({ length }).map((_, i) => {
         const isFilled = i < filled;
         return (
           <View
             key={i}
             style={[
-              styles.dot,
+              styles.cell,
+              { width: cellWidth, height: cellHeight, borderRadius: cellRadius },
               isFilled && { backgroundColor: error ? colors.danger : colors.purple },
               !isFilled && { borderColor: error ? colors.danger : colors.border },
             ]}
@@ -35,13 +52,9 @@ function createStyles(colors: Palette) {
     row: {
       flexDirection: "row" as const,
       justifyContent: "center" as const,
-      gap: spacing.lg,
     },
-    dot: {
-      width: 18,
-      height: 18,
-      borderRadius: 9,
-      borderWidth: 2,
+    cell: {
+      borderWidth: 3,
       borderColor: colors.border,
       backgroundColor: "transparent",
     },

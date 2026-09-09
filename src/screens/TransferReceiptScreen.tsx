@@ -59,7 +59,7 @@ export default function TransferReceiptScreen({ onHome, onTransferMore, onBack }
         <Button onPress={onHome} variant="purple">
           Back to Home
         </Button>
-        <Pressable onPress={onTransferMore} accessibilityRole="button" style={styles.more}>
+        <Pressable onPress={onTransferMore} accessibilityRole="button" role="button" style={styles.more}>
           <AppText variant="labelSM" color={colors.text} style={styles.moreText}>
             Transfer more money
           </AppText>

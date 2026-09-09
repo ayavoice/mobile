@@ -47,6 +47,7 @@ export default function SuccessScreen({ onDone, onReceipt }: Props) {
             onPress={() => setRevealed((v) => !v)}
             style={styles.reveal}
             accessibilityRole="button"
+            role="button"
             accessibilityLabel={revealed ? "Hide balance" : "Reveal balance"}
           >
             <Icon

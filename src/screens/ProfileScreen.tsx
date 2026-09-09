@@ -1,7 +1,7 @@
 import { Alert, Pressable, StyleSheet, View } from "react-native";
 import type { ComponentProps } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { AppText, Avatar, Card, Icon, IconWell, Screen, ScreenHeader } from "../components/ui";
+import { AppText, Avatar, Card, Icon, IconWell, Screen, ScreenHeader, Toggle } from "../components/ui";
 import { brandImages } from "../content/brand";
 import { useAppPrefs } from "../context/AppPrefs";
 import { languageDisplayName } from "../content/flows";
@@ -49,11 +49,24 @@ const LINKS: { icon: IonName; label: string; desc: string; screen: ScreenId }[] 
   },
 ];
 
+const ACCESSIBILITY_MODE_KEYS = ["voiceFirst", "largeText", "highContrast", "captions"] as const;
+
 export default function ProfileScreen({ onBack, onNav, onLogout }: Props) {
   const colors = useColors();
-  const { language } = useAppPrefs();
+  const { language, accessibility, setAccessibility } = useAppPrefs();
   const badges = badgesFor(colors);
   const earnedCount = badges.filter((b) => b.earned).length;
+
+  const accessibilityModeOn = ACCESSIBILITY_MODE_KEYS.every((key) => accessibility[key]);
+  const toggleAccessibilityMode = () => {
+    const next = !accessibilityModeOn;
+    setAccessibility({
+      voiceFirst: next,
+      largeText: next,
+      highContrast: next,
+      captions: next,
+    });
+  };
 
   const confirmLogout = () => {
     Alert.alert("Log out?", "You'll need to sign in again to use Aya.", [
@@ -81,6 +94,31 @@ export default function ProfileScreen({ onBack, onNav, onLogout }: Props) {
             </AppText>
           </View>
         </Card>
+
+        <Pressable
+          onPress={toggleAccessibilityMode}
+          accessibilityRole="button"
+          role="button"
+          accessibilityState={{ selected: accessibilityModeOn }}
+          accessibilityLabel={`Accessibility mode: ${accessibilityModeOn ? "on" : "off"}`}
+        >
+          <Card style={styles.a11yRow}>
+            <IconWell backgroundColor={colors.washPurple} size={44} radius={14}>
+              <Icon name="accessibility" size={22} color={colors.purple} />
+            </IconWell>
+            <View style={styles.flex}>
+              <AppText variant="labelMD">Accessibility mode</AppText>
+              <AppText variant="caption">Voice-first, large text, high contrast, captions</AppText>
+            </View>
+            <View pointerEvents="none">
+              <Toggle
+                value={accessibilityModeOn}
+                onValueChange={() => {}}
+                accessibilityLabel="Accessibility mode"
+              />
+            </View>
+          </Card>
+        </Pressable>
 
         <Card style={styles.streakCard}>
           <IconWell backgroundColor={colors.washPurple} size={56} radius={20}>
@@ -126,6 +164,7 @@ export default function ProfileScreen({ onBack, onNav, onLogout }: Props) {
               key={link.screen}
               onPress={() => onNav(link.screen)}
               accessibilityRole="button"
+              role="button"
               accessibilityLabel={link.label}
             >
               <Card style={styles.linkRow}>
@@ -142,7 +181,7 @@ export default function ProfileScreen({ onBack, onNav, onLogout }: Props) {
           ))}
         </View>
 
-        <Pressable onPress={confirmLogout} accessibilityRole="button" accessibilityLabel="Log out">
+        <Pressable onPress={confirmLogout} accessibilityRole="button" role="button" accessibilityLabel="Log out">
           <Card style={styles.linkRow}>
             <IconWell backgroundColor={colors.dangerSurface} size={44} radius={14}>
               <Icon name="log-out-outline" size={22} color={colors.danger} />
@@ -180,6 +219,11 @@ const styles = StyleSheet.create({
   },
   langTag: {
     marginTop: 4,
+  },
+  a11yRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 14,
   },
   streakCard: {
     flexDirection: "row",

@@ -56,6 +56,7 @@ export default function Button({
       onPress={onPress}
       disabled={isDisabled}
       accessibilityRole="button"
+      role="button"
       hitSlop={4}
       accessibilityLabel={
         accessibilityLabel ?? (typeof children === "string" ? children : undefined)

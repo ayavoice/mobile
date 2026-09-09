@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Pressable, View } from "react-native";
 import {
   AppText,
@@ -15,6 +15,7 @@ import {
 import { fonts, spacing, useColors, usePaletteStyles, type Palette } from "../theme";
 
 const PIN_LENGTH = 4;
+const PHONE_LENGTH = 9;
 
 type Props = {
   onNext: () => void;
@@ -30,15 +31,20 @@ export default function LoginScreen({ onNext, onBack, onForgotPin, onSignup }: P
   const styles = usePaletteStyles(createStyles);
   const [step, setStep] = useState<Step>("phone");
   const [phone, setPhone] = useState("");
+  const [phoneTouched, setPhoneTouched] = useState(false);
   const [pin, setPin] = useState("");
 
-  const phoneValid = phone.replace(/\D/g, "").length >= 9;
+  const phoneValid = phone.length === PHONE_LENGTH;
+  const phoneError =
+    phoneTouched && !phoneValid
+      ? `Enter all ${PHONE_LENGTH} digits of your phone number.`
+      : undefined;
 
-  useEffect(() => {
-    if (pin.length !== PIN_LENGTH) return;
-    const t = setTimeout(onNext, 300);
-    return () => clearTimeout(t);
-  }, [pin, onNext]);
+  const onPinChange = (next: string) => {
+    setPin(next);
+    if (next.length !== PIN_LENGTH) return;
+    setTimeout(onNext, 300);
+  };
 
   if (step === "pin") {
     return (
@@ -55,16 +61,19 @@ export default function LoginScreen({ onNext, onBack, onForgotPin, onSignup }: P
             <Icon name="lock-closed" size={26} color={colors.purple} />
           </IconWell>
 
-          <AppText variant="labelLG" align="center">
+          <AppText variant="labelLG" align="center" heading={1}>
             Enter your PIN
           </AppText>
-          <AppText variant="bodySM" align="center" color={colors.textSecondary}>
-            +233 {phone}
-          </AppText>
 
-          <PinInput length={PIN_LENGTH} value={pin} onChangeText={setPin} autoFocus />
+          <PinInput length={PIN_LENGTH} value={pin} onChangeText={onPinChange} autoFocus />
 
-          <Pressable onPress={onForgotPin} accessibilityLabel="Forgot PIN?" hitSlop={8}>
+          <Pressable
+            onPress={onForgotPin}
+            accessibilityRole="button"
+            role="button"
+            accessibilityLabel="Forgot PIN?"
+            hitSlop={8}
+          >
             <AppText variant="bodySM" color={colors.purple}>
               Forgot PIN?
             </AppText>
@@ -80,7 +89,7 @@ export default function LoginScreen({ onNext, onBack, onForgotPin, onSignup }: P
 
       <View style={styles.intro}>
         <BrandLogo height={40} />
-        <AppText variant="titleLG" align="center" style={styles.introTitle}>
+        <AppText variant="titleLG" align="center" heading={1} style={styles.introTitle}>
           Welcome back
         </AppText>
         <AppText variant="bodyMD" align="center" color={colors.textSecondary}>
@@ -92,11 +101,13 @@ export default function LoginScreen({ onNext, onBack, onForgotPin, onSignup }: P
         <TextField
           label="Phone number"
           value={phone}
-          onChangeText={(t) => setPhone(t.replace(/[^\d]/g, ""))}
+          onChangeText={(t) => setPhone(t.replace(/[^\d]/g, "").slice(0, PHONE_LENGTH))}
+          onBlur={() => setPhoneTouched(true)}
           placeholder="24 123 4567"
           prefix="+233"
           keyboardType="phone-pad"
-          maxLength={10}
+          maxLength={PHONE_LENGTH}
+          error={phoneError}
           autoFocus
         />
       </View>
@@ -107,6 +118,8 @@ export default function LoginScreen({ onNext, onBack, onForgotPin, onSignup }: P
         </Button>
         <Pressable
           onPress={onSignup}
+          accessibilityRole="button"
+          role="button"
           accessibilityLabel="Create a new account"
           hitSlop={8}
           style={styles.footerLink}

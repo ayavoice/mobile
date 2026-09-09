@@ -213,6 +213,8 @@ export default function HomeScreen({ onNav, onStartFlow }: Props) {
         <View style={styles.header}>
           <Pressable
             onPress={() => onNav("profile")}
+            accessibilityRole="button"
+            role="button"
             accessibilityLabel="Open your profile, Pratik"
             hitSlop={8}
             style={styles.profileRow}
@@ -232,6 +234,8 @@ export default function HomeScreen({ onNav, onStartFlow }: Props) {
               onPress={() =>
                 Alert.alert("Notifications", "You're all caught up, no new notifications.")
               }
+              accessibilityRole="button"
+              role="button"
               accessibilityLabel="Notifications"
               hitSlop={8}
               style={styles.iconBtn}
@@ -240,6 +244,8 @@ export default function HomeScreen({ onNav, onStartFlow }: Props) {
             </Pressable>
             <Pressable
               onPress={() => onNav("services")}
+              accessibilityRole="button"
+              role="button"
               accessibilityLabel="Open menu"
               hitSlop={8}
               style={styles.iconBtn}
@@ -273,6 +279,8 @@ export default function HomeScreen({ onNav, onStartFlow }: Props) {
           <View style={styles.micWrap}>
             <Pressable
               onPress={() => onStartFlow("transfer")}
+              accessibilityRole="button"
+              role="button"
               accessibilityLabel="Talk to send money"
               style={({ pressed }) => [styles.micButton, pressed && styles.micPressed]}
             >
@@ -288,25 +296,34 @@ export default function HomeScreen({ onNav, onStartFlow }: Props) {
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.hRow}
+          role="list"
+          accessibilityLabel="Recipients"
         >
           {RECIPIENTS.map((src, i) => (
-            <Pressable
-              key={i}
-              onPress={() => onStartFlow("transfer")}
-              accessibilityLabel="Send money to recipient"
-            >
-              <Avatar source={src} size={58} />
-            </Pressable>
+            <View key={i} role="listitem">
+              <Pressable
+                onPress={() => onStartFlow("transfer")}
+                accessibilityRole="button"
+                role="button"
+                accessibilityLabel="Send money to recipient"
+              >
+                <Avatar source={src} size={58} />
+              </Pressable>
+            </View>
           ))}
-          <Pressable
-            onPress={() => onStartFlow("transfer")}
-            accessibilityLabel="5 more recipients"
-            style={styles.moreCircle}
-          >
-            <AppText variant="labelSM" color={colors.white}>
-              5+
-            </AppText>
-          </Pressable>
+          <View role="listitem">
+            <Pressable
+              onPress={() => onStartFlow("transfer")}
+              accessibilityRole="button"
+              role="button"
+              accessibilityLabel="5 more recipients"
+              style={styles.moreCircle}
+            >
+              <AppText variant="labelSM" color={colors.white}>
+                5+
+              </AppText>
+            </Pressable>
+          </View>
         </ScrollView>
 
         <AppText variant="caption" style={styles.lastLabel}>
@@ -314,6 +331,8 @@ export default function HomeScreen({ onNav, onStartFlow }: Props) {
         </AppText>
         <Pressable
           onPress={() => onNav("history")}
+          accessibilityRole="button"
+          role="button"
           accessibilityLabel="Spotify, yesterday, minus 14 dollars 90"
           style={styles.actionRow}
         >
@@ -334,9 +353,11 @@ export default function HomeScreen({ onNav, onStartFlow }: Props) {
           snapToInterval={BANNER_WIDTH + BANNER_GAP}
           snapToAlignment="start"
           contentContainerStyle={styles.bannerRow}
+          role="list"
+          accessibilityLabel="Promotions"
         >
           {BANNERS.map((banner, i) => (
-            <View key={i} style={[styles.bannerCard, { backgroundColor: banner.bg }]}>
+            <View key={i} role="listitem" style={[styles.bannerCard, { backgroundColor: banner.bg }]}>
               <View style={styles.bannerText}>
                 <AppText variant="labelLG" color={colors.text}>
                   {banner.title}
@@ -359,26 +380,31 @@ export default function HomeScreen({ onNav, onStartFlow }: Props) {
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.hRow}
+          role="list"
+          accessibilityLabel="Quick send"
         >
           {QUICK_SEND.map((person) => {
             const selected = person.name === selectedSend;
             return (
-              <Pressable
-                key={person.name}
-                onPress={() => {
-                  setSelectedSend(person.name);
-                  onStartFlow("transfer");
-                }}
-                accessibilityLabel={`Quick send to ${person.name}`}
-                accessibilityState={{ selected }}
-                style={styles.quickItem}
-              >
-                <Avatar source={person.image} size={58} />
-                <AppText variant="caption" numberOfLines={1} style={styles.quickName}>
-                  {person.name}
-                </AppText>
-                <View style={[styles.caret, !selected && styles.caretHidden]} />
-              </Pressable>
+              <View key={person.name} role="listitem">
+                <Pressable
+                  onPress={() => {
+                    setSelectedSend(person.name);
+                    onStartFlow("transfer");
+                  }}
+                  accessibilityRole="button"
+                  role="button"
+                  accessibilityLabel={`Quick send to ${person.name}`}
+                  accessibilityState={{ selected }}
+                  style={styles.quickItem}
+                >
+                  <Avatar source={person.image} size={58} />
+                  <AppText variant="caption" numberOfLines={1} style={styles.quickName}>
+                    {person.name}
+                  </AppText>
+                  <View style={[styles.caret, !selected && styles.caretHidden]} />
+                </Pressable>
+              </View>
             );
           })}
         </ScrollView>

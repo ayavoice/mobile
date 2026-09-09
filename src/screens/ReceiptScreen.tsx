@@ -43,11 +43,11 @@ export default function ReceiptScreen({ onBack }: Props) {
             ))}
           </View>
           <View style={styles.actions}>
-            <Pressable style={styles.ghost} accessibilityRole="button">
+            <Pressable style={styles.ghost} accessibilityRole="button" role="button">
               <Icon name="volume-high" size={18} color={colors.purple} />
               <AppText variant="labelSM">Read aloud</AppText>
             </Pressable>
-            <Pressable style={styles.primary} accessibilityRole="button">
+            <Pressable style={styles.primary} accessibilityRole="button" role="button">
               <Icon name="share-outline" size={18} color={colors.white} />
               <AppText variant="labelSM" color={colors.white}>
                 Share

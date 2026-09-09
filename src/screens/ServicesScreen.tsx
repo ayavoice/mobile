@@ -46,6 +46,7 @@ export default function ServicesScreen({ onBack, onStartFlow }: Props) {
                 Alert.alert(service.label, "This service is coming soon.");
               }}
               accessibilityRole="button"
+              role="button"
               accessibilityLabel={service.label}
               style={styles.tile}
             >

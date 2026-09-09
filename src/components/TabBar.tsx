@@ -35,6 +35,8 @@ export default function TabBar({ current, onNav, onStartFlow }: Props) {
 
   return (
     <View
+      role="navigation"
+      accessibilityLabel="Main navigation"
       style={[
         styles.tabBar,
         { backgroundColor: colors.surface, paddingBottom: Math.max(insets.bottom, 12) },
@@ -46,6 +48,8 @@ export default function TabBar({ current, onNav, onStartFlow }: Props) {
             <Pressable
               key={tab.label}
               onPress={() => onStartFlow("transfer")}
+              accessibilityRole="button"
+              role="button"
               accessibilityLabel="Talk to send money"
               hitSlop={6}
               style={styles.tab}
@@ -70,8 +74,11 @@ export default function TabBar({ current, onNav, onStartFlow }: Props) {
           <Pressable
             key={tab.label}
             onPress={() => onNav(tab.screen)}
+            accessibilityRole="button"
+            role="button"
             accessibilityLabel={tab.label}
             accessibilityState={{ selected: active }}
+            aria-current={active ? "page" : undefined}
             hitSlop={6}
             style={styles.tab}
           >

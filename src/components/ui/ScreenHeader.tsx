@@ -15,14 +15,21 @@ export default function ScreenHeader({ title, onBack, right }: Props) {
   return (
     <View style={styles.top}>
       {onBack ? (
-        <Pressable onPress={onBack} accessibilityLabel="Go back" hitSlop={8} style={styles.btn}>
+        <Pressable
+          onPress={onBack}
+          accessibilityRole="button"
+          role="button"
+          accessibilityLabel="Go back"
+          hitSlop={8}
+          style={styles.btn}
+        >
           <Icon name="chevron-back" size={26} color={colors.text} />
         </Pressable>
       ) : (
         <View style={styles.btn} />
       )}
       {title ? (
-        <AppText variant="headingSM" numberOfLines={1} style={styles.title}>
+        <AppText variant="headingSM" numberOfLines={1} heading={1} style={styles.title}>
           {title}
         </AppText>
       ) : (
