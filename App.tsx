@@ -142,7 +142,7 @@ function AppNavigator() {
       break;
     case "send-money":
       content = (
-        <SendMoneyScreen onSend={() => go("transfer-receipt")} onBack={back} />
+        <SendMoneyScreen onSend={() => go("biometric")} onBack={back} />
       );
       break;
     case "transfer-receipt":
@@ -175,7 +175,15 @@ function AppNavigator() {
     case "processing":
       content = (
         <ProcessingScreen
-          onDone={() => go(activeFlow === "balance" ? "balance" : "success")}
+          onDone={() =>
+            go(
+              activeFlow === "balance"
+                ? "balance"
+                : activeFlow === "transfer"
+                  ? "transfer-receipt"
+                  : "success",
+            )
+          }
         />
       );
       break;

@@ -1,10 +1,10 @@
 export const ACCENT = "#FFCC08";
 
 export const brandImages = {
-  logoLight: require("../../assets/brand/logo.png"),
-  logoDark: require("../../assets/brand/logo-on-dark.png"),
+  logoLight: require("../../assets/brand/yellow.png"),
+  logoDark: require("../../assets/brand/yellow1.png"),
   logoMark: require("../../assets/brand/logo-mark.png"),
-  logo: require("../../assets/brand/logo.png"),
+  logo: require("../../assets/brand/yellow.png"),
   cardStack: require("../../assets/brand/home-card-stack.png"),
   successSpiral: require("../../assets/brand/transfer-success-spiral.png"),
   pratik: require("../../assets/brand/avatar-pratik.png"),

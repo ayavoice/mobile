@@ -16,6 +16,29 @@ type AppTextProps = TextProps & {
   heading?: 1 | 2 | 3 | 4 | 5 | 6;
 };
 
+// Sora has no glyph for the Cedi sign (₵) — browsers silently substitute a
+// mismatched fallback font for just that character, which looks broken next
+// to the surrounding bold digits. Render ₵ in the weight-matched Nunito cut
+// instead, which does have the glyph.
+const SORA_TO_NUNITO_CEDI: Record<string, string> = {
+  "Sora-Regular": "Nunito-Regular",
+  "Sora-Medium": "Nunito-Medium",
+  "Sora-SemiBold": "Nunito-SemiBold",
+  "Sora-Bold": "Nunito-Bold",
+  "Sora-ExtraBold": "Nunito-ExtraBold",
+};
+
+function renderWithCediFix(text: string, soraFontFamily: string) {
+  const cediFont = SORA_TO_NUNITO_CEDI[soraFontFamily];
+  const parts = text.split("₵");
+  return parts.map((part, i) => (
+    <Text key={i}>
+      {part}
+      {i < parts.length - 1 ? <Text style={{ fontFamily: cediFont }}>₵</Text> : null}
+    </Text>
+  ));
+}
+
 function colorForVariant(variant: TypographyVariant, colors: Palette) {
   if (variant === "heroAmount") {
     return colors.textOnYellow;
@@ -88,6 +111,15 @@ export default function AppText({
       }
     : null;
 
+  const soraFontFamily = typeof typeStyle.fontFamily === "string" ? typeStyle.fontFamily : null;
+  const content =
+    typeof children === "string" &&
+    children.includes("₵") &&
+    soraFontFamily &&
+    soraFontFamily.startsWith("Sora")
+      ? renderWithCediFix(children, soraFontFamily)
+      : children;
+
   return (
     <Text
       style={[
@@ -101,7 +133,7 @@ export default function AppText({
       {...headingProps}
       {...rest}
     >
-      {children}
+      {content}
     </Text>
   );
 }

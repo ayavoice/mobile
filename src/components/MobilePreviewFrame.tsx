@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
   phone: {
     width: 390,
     height: "100%" as unknown as number,
+    maxHeight: 926,
     overflow: "hidden",
   },
 });
